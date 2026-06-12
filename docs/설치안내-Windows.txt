@@ -1,0 +1,28 @@
+XPSFit Studio — Windows 설치 안내
+=====================================
+
+1. "XPSFit-Studio-Windows.zip"을 다운로드하고 우클릭 → "압축 풀기".
+2. 풀린 "XPSFit Studio" 폴더를 원하는 위치(예: C:\Programs\)로 옮깁니다.
+   ※ 폴더 전체가 프로그램입니다 — 폴더 안의 파일을 따로 옮기지 마세요.
+3. 폴더 안의 "XPSFit Studio.exe"를 더블클릭해 실행합니다.
+   바로가기가 필요하면 exe 우클릭 → "시작 화면에 고정" 또는 "바로 가기 만들기".
+
+※ 처음 실행할 때 Windows Defender SmartScreen이 파란 경고창을 띄울 수 있습니다:
+   "추가 정보" 클릭 → "실행" 버튼. (서명 인증서가 없는 프로그램이라 뜨는 표준 경고로,
+   한 번 실행하면 다시 묻지 않습니다.)
+
+※ 지원: 일반 x64 Windows 10/11 PC. 설치/Python 필요 없음.
+
+--------------------------------
+빠른 시작 (30초)
+
+1. File → Import Data… 로 XPS 데이터(.dat/.txt/.csv/.xlsx/.xls) 열기
+   - Thermo Avantage 엑셀 export면 시트 체크박스에서 가져올 스캔 선택
+   - 또는 엑셀에서 두 열 복사 후 📋 Paste (Ctrl+Shift+V)
+2. C 1s 먼저 피크분리 → Regions 패널 "C-C→284.8" → "Shift 적용" (대전 보정)
+3. 피크 테이블에서 Type(단일/Doublet/Satellite) 지정 또는 우측 DB의 Recipe 삽입
+4. ⚡ Fit Region → 🔍 진단으로 검증 → Export
+
+※ 직접 쓰는 문헌값은 Reference DB 패널 "＋ 내 레퍼런스"로 등록하세요.
+   C:\Users\<이름>\.xpsfit\user_refdb.json 에 저장되며 ★ 표시로 구분됩니다.
+   맥에서 쓰던 user_refdb.json을 같은 위치에 복사하면 DB가 그대로 옮겨집니다.
