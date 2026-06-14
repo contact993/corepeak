@@ -29,5 +29,5 @@ one — Corepeak is the **free, Mac-friendly, validation-focused** option.
 
 :::note
 This page aims to be fair. Spotted something inaccurate about another tool?
-[Tell me](https://github.com/contact993/xpsfit/issues/new/choose) and I'll fix it.
+[Tell me](https://github.com/contact993/corepeak/issues/new/choose) and I'll fix it.
 :::

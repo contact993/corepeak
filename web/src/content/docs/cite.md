@@ -6,6 +6,10 @@ description: How to cite the Corepeak XPS peak-fitting software in your publicat
 If Corepeak helped your research, please cite it — it's how a free academic tool justifies its
 continued development.
 
+:::tip[Two ways to support this free, no-ads tool]
+**⭐ [Star Corepeak on GitHub](https://github.com/contact993/corepeak)** and **📑 cite it** (below). Both are free, take seconds, and are what keep a no-ads academic tool funded and maintained.
+:::
+
 A peer-reviewed software paper with a DOI is in preparation. Until it appears, please cite the
 software repository and the release version you used:
 
@@ -14,12 +18,12 @@ software repository and the release version you used:
   author  = {Kim, Taehee},
   title   = {Corepeak: free cross-platform XPS peak fitting with a built-in fit auditor},
   year    = {2026},
-  url     = {https://github.com/contact993/xpsfit},
-  version = {0.1.0}
+  url     = {https://github.com/contact993/corepeak},
+  version = {0.1.2}
 }
 ```
 
-The repository also ships a [`CITATION.cff`](https://github.com/contact993/xpsfit/blob/main/CITATION.cff),
+The repository also ships a [`CITATION.cff`](https://github.com/contact993/corepeak/blob/main/CITATION.cff),
 so GitHub's "Cite this repository" button always gives the current version.
 
 #### Reference-data sources

@@ -7,7 +7,7 @@ Corepeak is free and open source (GPLv3). No account, no install of Python requi
 
 ## Latest release
 
-Get the signed installers from the **[GitHub Releases page →](https://github.com/contact993/xpsfit/releases)**.
+Get the signed installers from the **[GitHub Releases page →](https://github.com/contact993/corepeak/releases)**.
 
 ### macOS (Apple Silicon)
 1. Download the `.app.zip`, unzip it, and move **Corepeak.app** to Applications.
@@ -19,14 +19,21 @@ Get the signed installers from the **[GitHub Releases page →](https://github.c
 2. On the first SmartScreen prompt: **More info → Run anyway** (the reputation prompt clears as more people download).
 
 :::note
-Need an Intel-Mac or Linux build? [Open an issue](https://github.com/contact993/xpsfit/issues/new/choose) and let me know.
+Need an Intel-Mac or Linux build? [Open an issue](https://github.com/contact993/corepeak/issues/new/choose) and let me know.
 :::
 
 ## Run from source
 
 ```bash
-git clone https://github.com/contact993/xpsfit && cd xpsfit
+git clone https://github.com/contact993/corepeak && cd corepeak
 python -m venv .venv && . .venv/bin/activate
 pip install -e .
 python -m xpsfit.app
 ```
+
+## ⭐ After you install
+
+Corepeak is **100% free, with no ads**. If it helps your work, two things keep it alive:
+
+- **[Star it on GitHub →](https://github.com/contact993/corepeak)** — the clearest signal that the tool is used.
+- **[Cite it in your paper →](/corepeak/cite/)** — citations are what justify a free academic tool's continued development.

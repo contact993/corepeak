@@ -9,7 +9,7 @@ submission.
 
 ## Submit a value
 
-[📚 Submit a reference value →](https://github.com/contact993/xpsfit/issues/new?template=reference_submission.yml)
+[📚 Submit a reference value →](https://github.com/contact993/corepeak/issues/new?template=reference_submission.yml)
 
 You'll be asked for the element, orbital, chemical state, binding energy (and optional range /
 lineshape hint), and — **required** — the **literature source** (citation or DOI).

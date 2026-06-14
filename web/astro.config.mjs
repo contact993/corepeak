@@ -16,7 +16,7 @@ const softwareJsonLd = {
   description:
     'Free, cross-platform XPS (X-ray photoelectron spectroscopy) peak-fitting app with a built-in fit auditor and a citation-backed reference database. The modern replacement for XPSPEAK 4.1.',
   url: SITE + BASE + '/',
-  downloadUrl: 'https://github.com/contact993/xpsfit/releases',
+  downloadUrl: 'https://github.com/contact993/corepeak/releases',
   softwareVersion: '0.1.0',
   license: 'https://www.gnu.org/licenses/gpl-3.0.html',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -33,7 +33,7 @@ export default defineConfig({
       tagline: 'Free XPS peak fitting for Mac & Windows — with a built-in fit auditor',
       description:
         'Free, cross-platform XPS peak-fitting software with a fit auditor and a citation-backed reference database. The modern XPSPEAK 4.1 replacement.',
-      social: { github: 'https://github.com/contact993/xpsfit' },
+      social: { github: 'https://github.com/contact993/corepeak' },
       customCss: ['./src/styles/custom.css'],
       defaultLocale: 'root',
       locales: {

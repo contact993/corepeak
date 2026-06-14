@@ -8,7 +8,7 @@ Corepeak의 레퍼런스 데이터베이스는 **출처가 명시**되어 있습
 
 ## 값 제출
 
-[📚 레퍼런스 값 제보하기 →](https://github.com/contact993/xpsfit/issues/new?template=reference_submission.yml)
+[📚 레퍼런스 값 제보하기 →](https://github.com/contact993/corepeak/issues/new?template=reference_submission.yml)
 
 원소, 오비탈, 화학 상태, 결합에너지(+선택: 범위 / 라인섀입 힌트), 그리고 — **필수** — **문헌
 출처**(인용 또는 DOI)를 입력하게 됩니다.

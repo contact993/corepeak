@@ -6,16 +6,16 @@ description: Report bugs, request features, and vote on what gets built next in 
 Corepeak is built around what its users need. There are three ways to shape it:
 
 ## 🐞 Report a bug
-[Open a bug report →](https://github.com/contact993/xpsfit/issues/new?template=bug_report.yml)
+[Open a bug report →](https://github.com/contact993/corepeak/issues/new?template=bug_report.yml)
 Attaching a small sample data file or a screenshot helps a lot.
 
 ## 💡 Request a feature
-[Open a feature request →](https://github.com/contact993/xpsfit/issues/new?template=feature_request.yml)
+[Open a feature request →](https://github.com/contact993/corepeak/issues/new?template=feature_request.yml)
 Describe the analysis pain point, not just the feature — it leads to better solutions.
 
 ## 💬 Ask & vote (Discussions)
 For questions, sharing fits, or voting on what to build next, use the
-[Discussions board →](https://github.com/contact993/xpsfit/discussions). Watching what people
+[Discussions board →](https://github.com/contact993/corepeak/discussions). Watching what people
 upvote is how the roadmap gets set.
 
 You can also reach these directly from inside the app: **Help ▸ 피드백 보내기 / 레퍼런스 제보**.

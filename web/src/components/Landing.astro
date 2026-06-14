@@ -1,0 +1,524 @@
+---
+// Corepeak dark "instrument-panel" landing — faithful port of Corepeak.dc.html.
+// Self-contained full page (own nav + footer), rendered outside Starlight chrome.
+// One component, two locales: pass lang="en" | "ko".
+interface Props { lang?: 'en' | 'ko' }
+const { lang = 'en' } = Astro.props;
+
+const RAW_BASE = import.meta.env.BASE_URL;             // '/corepeak' (no trailing slash here)
+const BASE = RAW_BASE.endsWith('/') ? RAW_BASE : `${RAW_BASE}/`;  // '/corepeak/'
+const docBase = lang === 'ko' ? `${BASE}ko/` : BASE;
+const GH = 'https://github.com/contact993/corepeak';
+const DL = `${docBase}download/`;
+const FEAT = `${docBase}features/`;
+const GUIDE = `${BASE}guides/fit-audit/`;              // guides are English-only
+const altHref = lang === 'ko' ? BASE : `${BASE}ko/`;
+const altLabel = lang === 'ko' ? 'EN' : '한국어';
+const SHOT = lang === 'ko' ? `${BASE}screenshot-ko.png` : `${BASE}screenshot.png`;
+const CITE = `${docBase}cite/`;
+
+const dict = {
+  en: {
+    htmlTitle: 'Corepeak — free XPS peak fitting for Mac & Windows',
+    metaDesc:
+      'Free, cross-platform XPS peak-fitting app with a built-in fit auditor and a citation-backed reference database. The modern replacement for XPSPEAK 4.1.',
+    navFeatures: 'Features', navAuditor: 'Fit auditor', navCompare: 'Compare', navGuides: 'Guides',
+    navStar: 'Star', navDownload: 'Download',
+    heroBadge: 'FREE · OPEN SOURCE · macOS &amp; WINDOWS',
+    heroTitleA: 'Fit XPS spectra — and', heroTitleB: 'know when your fit is wrong.',
+    heroSub:
+      'A free, cross-platform XPS peak-fitting app with a built-in <span style="color:#E9EEF6;font-weight:500">fit auditor</span> and a citation-backed reference database. The modern replacement for XPSPEAK&nbsp;4.1.',
+    heroDownload: 'Download free', heroGithub: 'View on GitHub',
+    heroNote: 'No account · no peak limits · GPLv3',
+    shotAlt: 'Corepeak fitting a real Ni 2p XPS spectrum — Regions panel, reference database, peak table and the fit auditor',
+    legEnvelope: 'Envelope', legBackground: 'Background', legComponents: 'Components',
+    axisX: 'Binding energy (eV)', axisY: 'Counts (a.u.)', residual: 'Δ residual',
+    peakTable: 'Peak table', componentsN: '6 components',
+    colSpecies: 'SPECIES', colBE: 'BE', colFWHM: 'FWHM',
+    species: ['Ni 2p₃ metal', 'NiO', 'Ni(OH)₂', 'Satellite', 'Ni 2p₁', 'Satellite'],
+    auditorTitle: 'Fit auditor', oneIssue: '1 issue',
+    audA: 'FWHM within bounds', audB: 'Reference BE match', audC: 'Doublet area 2:1',
+    audD: 'Lineshape (LA) tail', audDv: 'check', audE: 'Leave-one-out', audEv: 'Peak 4 ✕',
+    featEyebrow: 'NOT JUST A FITTER — A VALIDATOR',
+    featH2: 'Everything XPSPEAK did, plus the checks that keep your fits defensible',
+    featSub: 'On a modern Mac/Windows interface — no Python, no account, no peak ceiling.',
+    card1H: 'Built-in fit auditor',
+    card1P: "FWHM sanity, reference binding-energy checks, doublet integrity, lineshape, satellites, residual z-score, BIC — and a leave-one-out test that flags peaks the data doesn't require.",
+    card2H: 'Citation-backed database',
+    card2P: '24 elements with binding energies, spin-orbit parameters and RSFs — every value with its literature source. One-click recipes; add your own references.',
+    card3H: 'Truly cross-platform',
+    card3P: 'Native macOS and Windows. No 5,000-point / 51-peak ceiling like XPSPEAK. No Python, no account — free forever under GPLv3.',
+    card4H: 'Imports everything',
+    card4P: '.dat / .csv / .xlsx / .xls, Thermo Avantage multi-sheet, VAMAS, or paste two columns from Excel. KE→BE conversion built in.',
+    audEyebrow: 'FIT AUDIT', audH2A: 'Is your fit', audH2B: 'defensible?',
+    audP: 'A flat residual isn\'t enough. Corepeak\'s auditor runs the checks a careful reviewer would — and a statistical <span style="color:#E9EEF6;font-weight:500">leave-one-out test</span> that catches the "I added a peak and nothing changed" trap.',
+    audCta: 'See how it works',
+    stat1L: 'audit checks', stat2L: 'elements in DB', stat3L: 'forever',
+    repTitle: 'Audit report', repBadge: 'REVIEW · 7/8 pass',
+    rep1: 'FWHM sanity', rep1v: 'all within 0.9–1.7 eV',
+    rep2: 'Reference BE check', rep2v: 'matches NIST',
+    rep3: 'Doublet integrity', rep3v: '2p ratio = 2.01',
+    rep4: 'Residual z-score', rep4v: '|z| max 2.4',
+    rep5: 'Lineshape', rep5v: 'asym. tail flagged',
+    rep6: 'Leave-one-out test',
+    rep6d: "Peak 4 (861.0 eV): removing it changes BIC by −1.2. The data doesn't require this peak.",
+    cmpEyebrow: 'THE MODERN XPSPEAK REPLACEMENT', cmpH2: 'An honest comparison',
+    cmpSub: 'Corepeak is the free, Mac-friendly, validation-focused option.',
+    cmpPrice: 'Price', cmpFreeOss: 'Free (OSS)', cmpFree: 'Free',
+    cmpMac: 'macOS native', cmpAuditor: 'Built-in fit auditor',
+    cmpDB: 'Citation-backed reference DB', cmpPartial: 'partial',
+    cmpRecipes: 'One-click recipes', cmpMaintained: 'Actively maintained', cmpSince: '✕ since 1999',
+    fmtTitle: 'Works with your data', fmtSub: 'Import anything, paste from Excel',
+    ctaH2: 'Download Corepeak — free',
+    ctaP: 'Built by a researcher, for researchers. No account, no peak limits, no catch.',
+    ctaMac: 'Download for macOS', ctaWin: 'Download for Windows',
+    ctaNote: 'GPLv3 · cite-friendly · ', ctaNoteLink: 'see all features →',
+    ctaSupport: 'Free for research — if Corepeak helps your work, please',
+    ctaStar: '⭐ Star on GitHub', ctaCite: '📑 Cite Corepeak',
+    footTagline: 'Free, cross-platform XPS peak-fitting with a built-in fit auditor. The modern replacement for XPSPEAK 4.1.',
+    footProduct: 'PRODUCT', footFeatures: 'Features', footDownload: 'Download', footGuide: 'Fit-audit guide',
+    footProject: 'PROJECT', footDiscussions: 'Discussions', footLicense: 'License · GPLv3', footCite: 'Cite Corepeak',
+    footCompare: 'COMPARE', footVsXps: 'vs XPSPEAK 4.1', footVsCasa: 'vs CasaXPS', footAuditor: 'The fit auditor',
+    footCopyright: '© 2026 Corepeak · GPLv3', footComments: 'Comments powered by GitHub Discussions',
+  },
+  ko: {
+    htmlTitle: 'Corepeak — Mac·Windows용 무료 XPS 피크 피팅',
+    metaDesc:
+      '내장 핏 오디터와 인용 기반 레퍼런스 DB를 갖춘 무료·크로스플랫폼 XPS 피크 피팅 앱. XPSPEAK 4.1의 현대적 대체재.',
+    navFeatures: '기능', navAuditor: '핏 오디터', navCompare: '비교', navGuides: '가이드',
+    navStar: 'Star', navDownload: '다운로드',
+    heroBadge: '무료 · 오픈소스 · macOS &amp; WINDOWS',
+    heroTitleA: 'XPS 스펙트럼을 피팅하고 —', heroTitleB: '핏이 틀렸을 때를 알아내세요.',
+    heroSub:
+      '내장 <span style="color:#E9EEF6;font-weight:500">핏 오디터</span>와 인용 기반 레퍼런스 DB를 갖춘 무료·크로스플랫폼 XPS 피크 피팅 앱. XPSPEAK&nbsp;4.1의 현대적 대체재.',
+    heroDownload: '무료 다운로드', heroGithub: 'GitHub에서 보기',
+    heroNote: '계정 불필요 · 피크 개수 제한 없음 · GPLv3',
+    shotAlt: '실제 Ni 2p XPS 스펙트럼을 피팅 중인 Corepeak — Regions 패널, 레퍼런스 DB, 피크 표, 핏 오디터',
+    legEnvelope: '엔벨로프', legBackground: '백그라운드', legComponents: '성분',
+    axisX: '결합 에너지 (eV)', axisY: '강도 (a.u.)', residual: 'Δ 잔차',
+    peakTable: '피크 표', componentsN: '성분 6개',
+    colSpecies: '화학종', colBE: 'BE', colFWHM: 'FWHM',
+    species: ['Ni 2p₃ 금속', 'NiO', 'Ni(OH)₂', '새틀라이트', 'Ni 2p₁', '새틀라이트'],
+    auditorTitle: '핏 오디터', oneIssue: '이슈 1건',
+    audA: 'FWHM 범위 내', audB: '레퍼런스 BE 일치', audC: '더블릿 면적 2:1',
+    audD: '라인셰이프(LA) 꼬리', audDv: '확인', audE: 'Leave-one-out', audEv: '피크 4 ✕',
+    featEyebrow: '단순 피터가 아닌 — 검증 도구',
+    featH2: 'XPSPEAK이 하던 모든 것에, 핏을 방어 가능하게 하는 검증을 더했습니다',
+    featSub: '현대적인 Mac/Windows 인터페이스에서 — Python·계정·피크 개수 제한 없음.',
+    card1H: '내장 핏 오디터',
+    card1P: 'FWHM 적정성, 레퍼런스 결합 에너지 확인, 더블릿 무결성, 라인셰이프, 새틀라이트, 잔차 z-score, BIC — 그리고 데이터가 요구하지 않는 피크를 잡아내는 leave-one-out 검정.',
+    card2H: '인용 기반 레퍼런스 DB',
+    card2P: '결합 에너지·스핀-궤도 파라미터·RSF를 갖춘 24개 원소 — 모든 값에 문헌 출처 표기. 원클릭 레시피, 직접 레퍼런스 추가 가능.',
+    card3H: '진정한 크로스플랫폼',
+    card3P: '네이티브 macOS·Windows. XPSPEAK 같은 5,000포인트 / 51피크 제한 없음. Python·계정 불필요 — GPLv3로 영구 무료.',
+    card4H: '모든 포맷 가져오기',
+    card4P: '.dat / .csv / .xlsx / .xls, Thermo Avantage 멀티시트, VAMAS, 또는 Excel에서 두 열 붙여넣기. KE→BE 변환 내장.',
+    audEyebrow: '핏 오디트', audH2A: '당신의 핏은', audH2B: '방어 가능한가요?',
+    audP: '평평한 잔차만으론 부족합니다. Corepeak의 오디터는 꼼꼼한 리뷰어가 할 검증을 수행하고 — "피크를 추가해도 아무것도 안 바뀌는" 함정을 잡는 통계적 <span style="color:#E9EEF6;font-weight:500">leave-one-out 검정</span>까지 실행합니다.',
+    audCta: '작동 방식 보기',
+    stat1L: '오디트 체크', stat2L: 'DB 원소 수', stat3L: '영구',
+    repTitle: '오디트 리포트', repBadge: '검토 · 7/8 통과',
+    rep1: 'FWHM 적정성', rep1v: '모두 0.9–1.7 eV',
+    rep2: '레퍼런스 BE 확인', rep2v: 'NIST 일치',
+    rep3: '더블릿 무결성', rep3v: '2p 비율 = 2.01',
+    rep4: '잔차 z-score', rep4v: '|z| 최대 2.4',
+    rep5: '라인셰이프', rep5v: '비대칭 꼬리 플래그',
+    rep6: 'Leave-one-out 검정',
+    rep6d: '피크 4 (861.0 eV): 제거 시 BIC가 −1.2만큼 변합니다. 데이터가 이 피크를 요구하지 않습니다.',
+    cmpEyebrow: '현대적 XPSPEAK 대체재', cmpH2: '솔직한 비교',
+    cmpSub: 'Corepeak은 무료·Mac 친화적·검증 중심의 선택지입니다.',
+    cmpPrice: '가격', cmpFreeOss: '무료 (OSS)', cmpFree: '무료',
+    cmpMac: 'macOS 네이티브', cmpAuditor: '내장 핏 오디터',
+    cmpDB: '인용 기반 레퍼런스 DB', cmpPartial: '부분',
+    cmpRecipes: '원클릭 레시피', cmpMaintained: '활발히 유지보수', cmpSince: '✕ 1999년 이후',
+    fmtTitle: '당신의 데이터와 호환', fmtSub: '무엇이든 가져오고, Excel에서 붙여넣기',
+    ctaH2: 'Corepeak 다운로드 — 무료',
+    ctaP: '연구자가 연구자를 위해 만들었습니다. 계정·피크 제한·함정 없음.',
+    ctaMac: 'macOS용 다운로드', ctaWin: 'Windows용 다운로드',
+    ctaNote: 'GPLv3 · 인용 친화적 · ', ctaNoteLink: '전체 기능 보기 →',
+    ctaSupport: '연구용 무료 도구입니다 — Corepeak이 도움이 됐다면',
+    ctaStar: '⭐ GitHub Star', ctaCite: '📑 Corepeak 인용',
+    footTagline: '내장 핏 오디터를 갖춘 무료·크로스플랫폼 XPS 피크 피팅. XPSPEAK 4.1의 현대적 대체재.',
+    footProduct: '제품', footFeatures: '기능', footDownload: '다운로드', footGuide: '핏 오디트 가이드',
+    footProject: '프로젝트', footDiscussions: '디스커션', footLicense: '라이선스 · GPLv3', footCite: 'Corepeak 인용',
+    footCompare: '비교', footVsXps: 'vs XPSPEAK 4.1', footVsCasa: 'vs CasaXPS', footAuditor: '핏 오디터',
+    footCopyright: '© 2026 Corepeak · GPLv3', footComments: '댓글은 GitHub Discussions 기반',
+  },
+} as const;
+
+const t = dict[lang];
+
+// Reusable fragments
+const logo = (s: number) => `<svg width="${s}" height="${s}" viewBox="0 0 64 64" fill="none"><path d="M8 47 L56 43" stroke="#33405c" stroke-width="1.8" stroke-linecap="round"/><path d="M11 46 C16 46 21 15 27 14.5 C33 15 37 45 42 44.6 Z" fill="#4f8cff"/><path d="M31 45 C36 45 39 25 44 24.5 C49 25 52 44 56 43.2 Z" fill="#22d3ee" fill-opacity="0.9"/><path d="M11 46 C16 46 21 15 27 14.5 C31 15 33 30 36 31 C38 31.6 39 25 44 24.5 C49 25 52 43.5 56 43" stroke="#ffffff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const CHECK = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f8cff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle"><path d="M5 12.5l4 4 10-10"/></svg>`;
+const CROSS = `<span style="color:#444E5C;font-size:15px;font-weight:600">✕</span>`;
+
+const SPECIES_COLORS = ['#4FD1C5', '#60A5FA', '#A78BFA', '#FBBF24', '#FB7185', '#34D399'];
+const SPECIES_BE = ['852.6', '854.2', '855.9', '861.0', '870.4', '873.0'];
+const SPECIES_FWHM = ['0.95', '1.30', '1.70', '3.10', '1.35', '2.00'];
+const peakRows = t.species.map((name, i) =>
+  `<span style="display:flex;align-items:center;gap:7px;color:#C7D0DC"><span style="width:8px;height:8px;border-radius:2px;background:${SPECIES_COLORS[i]}"></span>${name}</span><span style="text-align:right;color:#9AA7B8">${SPECIES_BE[i]}</span><span style="text-align:right;color:#9AA7B8">${SPECIES_FWHM[i]}</span>`
+).join('');
+
+const body = `
+  <!-- ambient glows -->
+  <div style="position:absolute;top:-180px;left:50%;transform:translateX(-50%);width:1100px;height:620px;background:radial-gradient(ellipse at center,rgba(37,99,235,.10),transparent 60%);pointer-events:none;filter:blur(8px)"></div>
+  <div style="position:absolute;top:520px;left:-160px;width:560px;height:560px;background:radial-gradient(circle,rgba(96,165,250,.07),transparent 65%);pointer-events:none"></div>
+
+  <!-- NAV -->
+  <nav style="position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(7,9,13,.72);border-bottom:1px solid rgba(255,255,255,.07)">
+    <div style="max-width:1200px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:32px">
+      <a href="${docBase}" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#E9EEF6">
+        ${logo(26)}
+        <span style="font-family:'Space Grotesk';font-weight:700;font-size:19px;letter-spacing:-.01em">Corepeak</span>
+      </a>
+      <div style="display:flex;gap:26px;margin-left:8px" class="cp-navlinks">
+        <a href="#features" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14.5px">${t.navFeatures}</a>
+        <a href="#auditor" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14.5px">${t.navAuditor}</a>
+        <a href="#compare" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14.5px">${t.navCompare}</a>
+        <a href="${GUIDE}" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14.5px">${t.navGuides}</a>
+      </div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:14px">
+        <a href="${altHref}" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-family:'IBM Plex Mono';font-size:12.5px;letter-spacing:.04em">${altLabel}</a>
+        <a href="${GH}" class="cp-star" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:#C7D0DC;font-family:'IBM Plex Mono';font-size:12.5px;padding:8px 13px;border:1px solid rgba(255,255,255,.1);border-radius:8px">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="#C7D0DC"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.32c-2.23.49-2.7-1.07-2.7-1.07-.36-.93-.89-1.18-.89-1.18-.73-.5.05-.49.05-.49.81.06 1.23.83 1.23.83.72 1.23 1.89.87 2.35.67.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+          ${t.navStar}
+        </a>
+        <a href="${DL}" class="cp-btn-primary" style="text-decoration:none;background:#2563eb;color:#ffffff;font-family:'Space Grotesk';font-weight:600;font-size:14px;padding:10px 18px;border-radius:9px;box-shadow:0 0 24px rgba(37,99,235,.28)">${t.navDownload}</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header style="position:relative;max-width:980px;margin:0 auto;padding:84px 24px 30px;text-align:center">
+    <div style="display:inline-flex;align-items:center;gap:9px;padding:6px 13px;border:1px solid rgba(255,255,255,.12);border-radius:999px;background:rgba(255,255,255,.02);font-family:'IBM Plex Mono';font-size:11.5px;letter-spacing:.12em;color:#9AA7B8">
+      <span style="width:7px;height:7px;border-radius:50%;background:#2563eb;box-shadow:0 0 10px #4f8cff;animation:cpPulse 2.4s ease-in-out infinite"></span>
+      ${t.heroBadge}
+    </div>
+    <h1 class="cp-h1" style="font-family:'Space Grotesk';font-weight:700;font-size:62px;line-height:1.04;letter-spacing:-.025em;margin:26px 0 0;text-wrap:balance">${t.heroTitleA}<br><span style="color:#4f8cff">${t.heroTitleB}</span></h1>
+    <p style="font-size:19px;color:#9AA7B8;max-width:620px;margin:24px auto 0;text-wrap:pretty">${t.heroSub}</p>
+    <div style="display:flex;gap:14px;justify-content:center;margin-top:34px;flex-wrap:wrap">
+      <a href="${DL}" class="cp-btn-primary" style="display:inline-flex;align-items:center;gap:9px;text-decoration:none;background:#2563eb;color:#ffffff;font-family:'Space Grotesk';font-weight:600;font-size:16px;padding:14px 26px;border-radius:11px;box-shadow:0 8px 30px rgba(37,99,235,.3)">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 11l5 5 5-5M5 21h14"/></svg>
+        ${t.heroDownload}
+      </a>
+      <a href="${GH}" class="cp-btn-ghost" style="display:inline-flex;align-items:center;gap:9px;text-decoration:none;background:transparent;color:#E9EEF6;font-family:'Space Grotesk';font-weight:600;font-size:16px;padding:14px 24px;border-radius:11px;border:1px solid rgba(255,255,255,.14)">${t.heroGithub}</a>
+    </div>
+    <div style="margin-top:20px;font-family:'IBM Plex Mono';font-size:12.5px;color:#5E6B7C;letter-spacing:.04em">${t.heroNote}</div>
+  </header>
+
+  <!-- APP WINDOW MOCKUP -->
+  <div style="position:relative;max-width:1180px;margin:46px auto 0;padding:0 24px">
+    <div style="position:absolute;inset:30px 60px -10px;background:radial-gradient(ellipse at center,rgba(37,99,235,.16),transparent 70%);filter:blur(20px);pointer-events:none"></div>
+    <div style="position:relative;border:1px solid rgba(255,255,255,.1);border-radius:15px;background:linear-gradient(180deg,#0E141C,#0A0F16);box-shadow:0 40px 120px -30px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.02);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.015)">
+        <div style="display:flex;gap:8px">
+          <span style="width:12px;height:12px;border-radius:50%;background:#FF5F57"></span>
+          <span style="width:12px;height:12px;border-radius:50%;background:#FEBC2E"></span>
+          <span style="width:12px;height:12px;border-radius:50%;background:#28C840"></span>
+        </div>
+        <div style="flex:1;text-align:center;font-family:'IBM Plex Mono';font-size:12px;color:#7B8696">Ni2p_oxide.dat — Corepeak</div>
+        <div style="width:52px"></div>
+      </div>
+      <img src="${SHOT}" alt="${t.shotAlt}" width="1724" height="927" loading="eager" fetchpriority="high" decoding="async" style="display:block;width:100%;height:auto" />
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <section id="features" style="max-width:1200px;margin:0 auto;padding:120px 24px 20px">
+    <div style="text-align:center;max-width:680px;margin:0 auto">
+      <div style="font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.16em;color:#4f8cff;margin-bottom:16px">${t.featEyebrow}</div>
+      <h2 class="cp-h2" style="font-family:'Space Grotesk';font-weight:700;font-size:40px;letter-spacing:-.02em;margin:0;line-height:1.1">${t.featH2}</h2>
+      <p style="color:#9AA7B8;font-size:17px;margin-top:16px">${t.featSub}</p>
+    </div>
+    <div class="cp-grid2" style="display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:54px">
+      <div class="cp-card cp-card--blue" style="border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.005))">
+        <div style="width:46px;height:46px;border-radius:11px;background:rgba(37,99,235,.1);border:1px solid rgba(37,99,235,.25);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#4f8cff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 21 21"/><path d="M7.6 10.6l2 2 3.4-4"/></svg>
+        </div>
+        <h3 style="font-family:'Space Grotesk';font-weight:600;font-size:19px;margin:0 0 9px">${t.card1H}</h3>
+        <p style="color:#9AA7B8;font-size:14.5px;margin:0;line-height:1.6">${t.card1P}</p>
+      </div>
+      <div class="cp-card cp-card--azure" style="border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.005))">
+        <div style="width:46px;height:46px;border-radius:11px;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.25);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#60A5FA" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6c0-1.6 3.6-3 8-3s8 1.4 8 3-3.6 3-8 3-8-1.4-8-3Z"/><path d="M4 6v6c0 1.6 3.6 3 8 3s8-1.4 8-3V6"/><path d="M4 12v6c0 1.6 3.6 3 8 3s8-1.4 8-3v-6"/></svg>
+        </div>
+        <h3 style="font-family:'Space Grotesk';font-weight:600;font-size:19px;margin:0 0 9px">${t.card2H}</h3>
+        <p style="color:#9AA7B8;font-size:14.5px;margin:0;line-height:1.6">${t.card2P}</p>
+      </div>
+      <div class="cp-card cp-card--violet" style="border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.005))">
+        <div style="width:46px;height:46px;border-radius:11px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="13" height="10" rx="1.5"/><rect x="9" y="10" width="12" height="10" rx="1.5"/></svg>
+        </div>
+        <h3 style="font-family:'Space Grotesk';font-weight:600;font-size:19px;margin:0 0 9px">${t.card3H}</h3>
+        <p style="color:#9AA7B8;font-size:14.5px;margin:0;line-height:1.6">${t.card3P}</p>
+      </div>
+      <div class="cp-card cp-card--amber" style="border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:28px;background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,.005))">
+        <div style="width:46px;height:46px;border-radius:11px;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.25);display:flex;align-items:center;justify-content:center;margin-bottom:18px">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#FBBF24" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/><path d="M12 3v11M8 10l4 4 4-4"/></svg>
+        </div>
+        <h3 style="font-family:'Space Grotesk';font-weight:600;font-size:19px;margin:0 0 9px">${t.card4H}</h3>
+        <p style="color:#9AA7B8;font-size:14.5px;margin:0;line-height:1.6">${t.card4P}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUDITOR DEEP DIVE -->
+  <section id="auditor" style="max-width:1200px;margin:0 auto;padding:100px 24px">
+    <div class="cp-grid2" style="display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center">
+      <div>
+        <div style="font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.16em;color:#4f8cff;margin-bottom:16px">${t.audEyebrow}</div>
+        <h2 class="cp-h2" style="font-family:'Space Grotesk';font-weight:700;font-size:42px;letter-spacing:-.02em;margin:0;line-height:1.08">${t.audH2A}<br>${t.audH2B}</h2>
+        <p style="color:#9AA7B8;font-size:17px;margin-top:20px;line-height:1.65;max-width:440px">${t.audP}</p>
+        <a href="${GUIDE}" class="cp-seehow" style="display:inline-flex;align-items:center;gap:8px;margin-top:26px;color:#4f8cff;text-decoration:none;font-weight:600;font-family:'Space Grotesk';font-size:16px">${t.audCta}
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4f8cff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <div style="display:flex;gap:30px;margin-top:40px">
+          <div><div style="font-family:'Space Grotesk';font-weight:700;font-size:30px;color:#E9EEF6">8</div><div style="font-size:13px;color:#5E6B7C;margin-top:2px">${t.stat1L}</div></div>
+          <div><div style="font-family:'Space Grotesk';font-weight:700;font-size:30px;color:#E9EEF6">24</div><div style="font-size:13px;color:#5E6B7C;margin-top:2px">${t.stat2L}</div></div>
+          <div><div style="font-family:'Space Grotesk';font-weight:700;font-size:30px;color:#E9EEF6">$0</div><div style="font-size:13px;color:#5E6B7C;margin-top:2px">${t.stat3L}</div></div>
+        </div>
+      </div>
+      <div style="border:1px solid rgba(255,255,255,.1);border-radius:16px;background:linear-gradient(180deg,#0E141C,#0A0F16);box-shadow:0 30px 80px -30px rgba(0,0,0,.7);overflow:hidden">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.07)">
+          <span style="font-family:'Space Grotesk';font-weight:600;font-size:15px">${t.repTitle}</span>
+          <span style="font-family:'IBM Plex Mono';font-size:11px;color:#FBBF24;border:1px solid rgba(251,191,36,.4);border-radius:6px;padding:4px 10px">${t.repBadge}</span>
+        </div>
+        <div style="padding:8px 20px">
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="width:9px;height:9px;border-radius:50%;background:#34D399;flex:none;box-shadow:0 0 8px rgba(52,211,153,.5)"></span><span style="flex:1;font-size:14px;color:#E9EEF6">${t.rep1}</span><span style="font-family:'IBM Plex Mono';font-size:11.5px;color:#5E6B7C">${t.rep1v}</span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="width:9px;height:9px;border-radius:50%;background:#34D399;flex:none;box-shadow:0 0 8px rgba(52,211,153,.5)"></span><span style="flex:1;font-size:14px;color:#E9EEF6">${t.rep2}</span><span style="font-family:'IBM Plex Mono';font-size:11.5px;color:#5E6B7C">${t.rep2v}</span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="width:9px;height:9px;border-radius:50%;background:#34D399;flex:none;box-shadow:0 0 8px rgba(52,211,153,.5)"></span><span style="flex:1;font-size:14px;color:#E9EEF6">${t.rep3}</span><span style="font-family:'IBM Plex Mono';font-size:11.5px;color:#5E6B7C">${t.rep3v}</span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="width:9px;height:9px;border-radius:50%;background:#34D399;flex:none;box-shadow:0 0 8px rgba(52,211,153,.5)"></span><span style="flex:1;font-size:14px;color:#E9EEF6">${t.rep4}</span><span style="font-family:'IBM Plex Mono';font-size:11.5px;color:#5E6B7C">${t.rep4v}</span></div>
+          <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,.05)"><span style="width:9px;height:9px;border-radius:50%;background:#FBBF24;flex:none;box-shadow:0 0 8px rgba(251,191,36,.5)"></span><span style="flex:1;font-size:14px;color:#E9EEF6">${t.rep5}</span><span style="font-family:'IBM Plex Mono';font-size:11.5px;color:#FBBF24">${t.rep5v}</span></div>
+          <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0 16px"><span style="width:9px;height:9px;border-radius:50%;background:#FB7185;flex:none;margin-top:4px;box-shadow:0 0 8px rgba(251,113,133,.5)"></span><div style="flex:1"><div style="font-size:14px;color:#E9EEF6">${t.rep6}</div><div style="margin-top:7px;background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.25);border-radius:8px;padding:9px 11px;font-family:'IBM Plex Mono';font-size:11.5px;color:#FB7185;line-height:1.5">${t.rep6d}</div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARISON -->
+  <section id="compare" style="max-width:1080px;margin:0 auto;padding:40px 24px 100px">
+    <div style="text-align:center;max-width:640px;margin:0 auto 48px">
+      <div style="font-family:'IBM Plex Mono';font-size:12px;letter-spacing:.16em;color:#4f8cff;margin-bottom:16px">${t.cmpEyebrow}</div>
+      <h2 class="cp-h2" style="font-family:'Space Grotesk';font-weight:700;font-size:40px;letter-spacing:-.02em;margin:0;line-height:1.1">${t.cmpH2}</h2>
+      <p style="color:#9AA7B8;font-size:17px;margin-top:16px">${t.cmpSub}</p>
+    </div>
+    <div class="cp-cmp-scroll" style="border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden;background:#0A0F16">
+      <div style="display:grid;grid-template-columns:1.5fr 1.1fr 1fr 1fr 1.15fr;min-width:640px">
+        <div style="padding:18px 20px;border-bottom:1px solid rgba(255,255,255,.08)"></div>
+        <div style="padding:16px 14px;border-bottom:1px solid rgba(37,99,235,.3);background:rgba(37,99,235,.07);text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px">
+          ${logo(20)}
+          <span style="font-family:'Space Grotesk';font-weight:700;font-size:15px;color:#4f8cff">Corepeak</span>
+        </div>
+        <div style="padding:18px 12px;border-bottom:1px solid rgba(255,255,255,.08);text-align:center;font-family:'Space Grotesk';font-weight:600;font-size:13.5px;color:#9AA7B8">XPSPEAK 4.1</div>
+        <div style="padding:18px 12px;border-bottom:1px solid rgba(255,255,255,.08);text-align:center;font-family:'Space Grotesk';font-weight:600;font-size:13.5px;color:#9AA7B8">CasaXPS</div>
+        <div style="padding:18px 12px;border-bottom:1px solid rgba(255,255,255,.08);text-align:center;font-family:'Space Grotesk';font-weight:600;font-size:13.5px;color:#9AA7B8">Kherve / LG4X</div>
+
+        <div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.05);font-size:14.5px;color:#C7D0DC">${t.cmpPrice}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(37,99,235,.05);text-align:center;font-family:'Space Grotesk';font-weight:700;font-size:14px;color:#4f8cff">${t.cmpFreeOss}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center;font-size:14px;color:#9AA7B8">${t.cmpFree}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center;font-size:14px;color:#9AA7B8">€830+</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center;font-size:14px;color:#9AA7B8">${t.cmpFreeOss}</div>
+
+        <div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.05);font-size:14.5px;color:#C7D0DC">${t.cmpMac}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(37,99,235,.05);text-align:center">${CHECK}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CROSS}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CROSS}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CHECK}</div>
+
+        <div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.05);font-size:14.5px;color:#C7D0DC">${t.cmpAuditor}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(37,99,235,.05);text-align:center">${CHECK}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CROSS}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CROSS}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CROSS}</div>
+
+        <div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.05);font-size:14.5px;color:#C7D0DC">${t.cmpDB}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(37,99,235,.05);text-align:center">${CHECK}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CROSS}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center;font-family:'IBM Plex Mono';font-size:11.5px;color:#FBBF24">${t.cmpPartial}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CROSS}</div>
+
+        <div style="padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.05);font-size:14.5px;color:#C7D0DC">${t.cmpRecipes}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);background:rgba(37,99,235,.05);text-align:center">${CHECK}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CROSS}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CHECK}</div>
+        <div style="padding:16px 12px;border-bottom:1px solid rgba(255,255,255,.05);text-align:center">${CROSS}</div>
+
+        <div style="padding:16px 20px;font-size:14.5px;color:#C7D0DC">${t.cmpMaintained}</div>
+        <div style="padding:16px 12px;background:rgba(37,99,235,.05);text-align:center">${CHECK}</div>
+        <div style="padding:16px 12px;text-align:center"><span style="font-family:'IBM Plex Mono';font-size:11px;color:#5E6B7C">${t.cmpSince}</span></div>
+        <div style="padding:16px 12px;text-align:center">${CHECK}</div>
+        <div style="padding:16px 12px;text-align:center">${CHECK}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMATS STRIP -->
+  <section style="max-width:1080px;margin:0 auto;padding:0 24px 60px">
+    <div style="border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:26px 28px;background:linear-gradient(180deg,rgba(255,255,255,.02),transparent);display:flex;align-items:center;gap:26px;flex-wrap:wrap">
+      <div style="flex:none">
+        <div style="font-family:'Space Grotesk';font-weight:600;font-size:16px;margin-bottom:4px">${t.fmtTitle}</div>
+        <div style="font-size:13px;color:#5E6B7C">${t.fmtSub}</div>
+      </div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;flex:1;justify-content:flex-end">
+        <span style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA7B8;border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:7px 12px">.dat</span>
+        <span style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA7B8;border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:7px 12px">.csv</span>
+        <span style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA7B8;border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:7px 12px">.xlsx</span>
+        <span style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA7B8;border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:7px 12px">.xls</span>
+        <span style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA7B8;border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:7px 12px">VAMAS</span>
+        <span style="font-family:'IBM Plex Mono';font-size:12px;color:#9AA7B8;border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:7px 12px">Thermo Avantage</span>
+        <span style="font-family:'IBM Plex Mono';font-size:12px;color:#4f8cff;border:1px solid rgba(37,99,235,.3);border-radius:7px;padding:7px 12px">KE→BE</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section style="position:relative;max-width:1080px;margin:0 auto;padding:40px 24px 110px">
+    <div style="position:relative;border:1px solid rgba(37,99,235,.2);border-radius:20px;padding:64px 40px;text-align:center;overflow:hidden;background:linear-gradient(180deg,rgba(37,99,235,.06),rgba(7,9,13,0))">
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(37,99,235,.12),transparent 60%);pointer-events:none"></div>
+      <div style="position:relative">
+        <h2 class="cp-h2" style="font-family:'Space Grotesk';font-weight:700;font-size:44px;letter-spacing:-.025em;margin:0;line-height:1.08">${t.ctaH2}</h2>
+        <p style="color:#9AA7B8;font-size:17px;margin:18px auto 0;max-width:480px">${t.ctaP}</p>
+        <div style="display:flex;gap:14px;justify-content:center;margin-top:34px;flex-wrap:wrap">
+          <a href="${DL}" class="cp-btn-primary" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:#2563eb;color:#ffffff;font-family:'Space Grotesk';font-weight:600;font-size:16px;padding:15px 26px;border-radius:11px;box-shadow:0 8px 30px rgba(37,99,235,.32)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff"><path d="M16.4 13.2c0 3-2.1 4.9-3.1 4.9-.9 0-1.4-.6-2.4-.6s-1.5.6-2.3.6c-1.2 0-3.4-2.9-3.4-5.9 0-3 1.9-4.5 3.6-4.5 1 0 1.7.6 2.3.6.5 0 1.4-.7 2.6-.6.8 0 2 .3 2.8 1.4-2.3 1.5-1.9 4.4.7 4.7ZM13.6 6.3c.5-.6.8-1.5.7-2.3-.7 0-1.6.5-2.1 1.1-.5.5-.9 1.4-.7 2.2.8.1 1.6-.4 2.1-1Z"/></svg>
+            ${t.ctaMac}
+          </a>
+          <a href="${DL}" class="cp-btn-ghost" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;background:rgba(255,255,255,.05);color:#E9EEF6;font-family:'Space Grotesk';font-weight:600;font-size:16px;padding:15px 26px;border-radius:11px;border:1px solid rgba(255,255,255,.14)">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="#E9EEF6"><path d="M3 5.4 10.5 4.3V11H3ZM12 4.1 21 3v8H12ZM3 12.5h7.5V19L3 17.9ZM12 12.5h9V21l-9-1.3Z"/></svg>
+            ${t.ctaWin}
+          </a>
+        </div>
+        <div style="margin-top:24px;font-family:'IBM Plex Mono';font-size:12px;color:#5E6B7C;letter-spacing:.04em">${t.ctaNote}<a href="${FEAT}" style="color:#9AA7B8;text-decoration:none">${t.ctaNoteLink}</a></div>
+        <div style="margin-top:22px;padding-top:20px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;font-size:13.5px">
+          <span style="color:#9AA7B8">${t.ctaSupport}</span>
+          <a href="${GH}" class="cp-btn-ghost" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:#E9EEF6;font-family:'Space Grotesk';font-weight:600;font-size:14px;padding:8px 15px;border-radius:9px;border:1px solid rgba(255,255,255,.14)">${t.ctaStar}</a>
+          <a href="${CITE}" class="cp-btn-ghost" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none;color:#E9EEF6;font-family:'Space Grotesk';font-weight:600;font-size:14px;padding:8px 15px;border-radius:9px;border:1px solid rgba(255,255,255,.14)">${t.ctaCite}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer style="border-top:1px solid rgba(255,255,255,.07);background:#080A0F">
+    <div class="cp-foot-grid" style="max-width:1200px;margin:0 auto;padding:48px 24px;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          ${logo(24)}
+          <span style="font-family:'Space Grotesk';font-weight:700;font-size:18px">Corepeak</span>
+        </div>
+        <p style="color:#5E6B7C;font-size:13.5px;max-width:280px;line-height:1.6;margin:0">${t.footTagline}</p>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.1em;color:#5E6B7C;margin-bottom:14px">${t.footProduct}</div>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <a href="#features" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14px">${t.footFeatures}</a>
+          <a href="${DL}" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14px">${t.footDownload}</a>
+          <a href="${GUIDE}" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14px">${t.footGuide}</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.1em;color:#5E6B7C;margin-bottom:14px">${t.footProject}</div>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <a href="${GH}" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14px">GitHub</a>
+          <a href="${CITE}" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14px">${t.footCite}</a>
+          <a href="${GH}/discussions" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14px">${t.footDiscussions}</a>
+          <a href="${GH}" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14px">${t.footLicense}</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'IBM Plex Mono';font-size:11px;letter-spacing:.1em;color:#5E6B7C;margin-bottom:14px">${t.footCompare}</div>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <a href="#compare" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14px">${t.footVsXps}</a>
+          <a href="#compare" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14px">${t.footVsCasa}</a>
+          <a href="#auditor" class="cp-navlink" style="color:#9AA7B8;text-decoration:none;font-size:14px">${t.footAuditor}</a>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:1200px;margin:0 auto;padding:18px 24px 40px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-family:'IBM Plex Mono';font-size:11.5px;color:#5E6B7C">
+      <span>${t.footCopyright}</span>
+      <span>${t.footComments}</span>
+    </div>
+  </footer>
+`;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.htmlTitle}</title>
+    <meta name="description" content={t.metaDesc} />
+    <link rel="canonical" href={Astro.site ? new URL(lang === 'ko' ? `${BASE}ko/` : BASE, Astro.site).href : docBase} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={t.htmlTitle} />
+    <meta property="og:description" content={t.metaDesc} />
+    <meta property="og:image" content={`${BASE}screenshot.png`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={`${BASE}screenshot.png`} />
+    <meta
+      name="keywords"
+      content="XPS, X-ray photoelectron spectroscopy, peak fitting, curve fitting, XPSPEAK alternative, CasaXPS alternative, free XPS software, surface analysis, Mac"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'Corepeak',
+      applicationCategory: 'ScienceApplication',
+      operatingSystem: 'macOS, Windows',
+      description: t.metaDesc,
+      downloadUrl: `${GH}/releases`,
+      license: 'https://www.gnu.org/licenses/gpl-3.0.html',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      author: { '@type': 'Person', name: 'Taehee Kim' },
+    })} />
+    <style is:global>
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body { margin: 0; background: #07090D; }
+      ::selection { background: rgba(37, 99, 235, .28); color: #fff; }
+      @keyframes cpPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
+      @keyframes cpFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+      @keyframes cpDash { to { stroke-dashoffset: -220; } }
+      a { transition: color .18s ease, background .18s ease, transform .18s ease, gap .18s ease; }
+      .cp-navlink:hover { color: #E9EEF6 !important; }
+      .cp-star:hover { background: rgba(255, 255, 255, .05); }
+      .cp-btn-primary:hover { background: #3b82f6 !important; transform: translateY(-1px); }
+      .cp-btn-ghost:hover { background: rgba(255, 255, 255, .09) !important; }
+      .cp-card { transition: border-color .18s ease, transform .18s ease; }
+      .cp-card:hover { transform: translateY(-2px); }
+      .cp-card--blue:hover { border-color: rgba(37, 99, 235, .35) !important; }
+      .cp-card--azure:hover { border-color: rgba(96, 165, 250, .35) !important; }
+      .cp-card--violet:hover { border-color: rgba(167, 139, 250, .35) !important; }
+      .cp-card--amber:hover { border-color: rgba(251, 191, 36, .35) !important; }
+      .cp-seehow:hover { gap: 12px !important; }
+      .cp-cmp-scroll { overflow-x: auto; }
+      @media (max-width: 860px) {
+        .cp-grid2 { grid-template-columns: 1fr !important; gap: 28px !important; }
+        .cp-h1 { font-size: 44px !important; }
+        .cp-h2 { font-size: 32px !important; }
+        .cp-foot-grid { grid-template-columns: 1fr 1fr !important; }
+        .cp-navlinks { display: none !important; }
+      }
+      @media (max-width: 520px) {
+        .cp-h1 { font-size: 36px !important; }
+        .cp-foot-grid { grid-template-columns: 1fr !important; }
+        .cp-star { display: none !important; }
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      style="background:#07090D;color:#E9EEF6;font-family:'IBM Plex Sans',system-ui,sans-serif;min-height:100vh;position:relative;overflow:hidden;-webkit-font-smoothing:antialiased;line-height:1.5"
+    >
+      <Fragment set:html={body} />
+    </div>
+  </body>
+</html>

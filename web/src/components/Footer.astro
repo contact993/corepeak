@@ -1,29 +1,61 @@
 ---
-// Custom Starlight footer: default footer + Giscus comments + an EthicalAds slot.
-// Both are inert until their accounts are wired (see TODOs); they fail silently otherwise.
+// Custom Starlight footer: default footer + a Star/Cite support block + Giscus comments.
+//
+// Corepeak is 100% free with NO ads. On every documentation page we instead place a
+// tasteful, privacy-clean nudge toward the two things that actually sustain a free
+// academic tool: a GitHub star and a citation. Both are plain links — no tracking.
 import Default from '@astrojs/starlight/components/Footer.astro';
 
-// Comments/ads only on content pages, not the splash landing page.
+const pathname = Astro.url.pathname;                 // e.g. /corepeak/ko/cite/
+const isKo = /\/ko(\/|$)/.test(pathname);
 const isSplash = Astro.props.entry?.data?.template === 'splash';
+const show = !isSplash;
+
+const GH = 'https://github.com/contact993/corepeak';
+const T = isKo
+  ? {
+      lead: 'Corepeak이 연구에 도움이 됐나요?',
+      body: '무료 학술 도구의 지속 개발을 정당화하는 건 ⭐ GitHub Star와 논문 인용입니다. 1초면 됩니다.',
+      star: '⭐ GitHub에서 Star',
+      cite: '📑 인용 방법',
+      citeHref: '/corepeak/ko/cite/',
+      comments: '댓글 · 질문',
+      ns1: '댓글은 GitHub Discussions 기반입니다 — ',
+      nsLink: '게시판 열기',
+    }
+  : {
+      lead: 'Did Corepeak help your research?',
+      body: 'A GitHub star and a citation are how a free academic tool justifies its continued development. Both take one second.',
+      star: '⭐ Star on GitHub',
+      cite: '📑 How to cite',
+      citeHref: '/corepeak/cite/',
+      comments: 'Comments & questions',
+      ns1: 'Comments are powered by GitHub Discussions — ',
+      nsLink: 'open the board',
+    };
 ---
 
 <Default {...Astro.props}><slot /></Default>
 
-{!isSplash && (
+{show && (
   <div class="cp-extras">
-    {/* EthicalAds — privacy-friendly, dev/docs network. Activates after EthicalAds approval.
-        Replace data-ea-publisher with your publisher id and enable the script below. */}
-    <div class="cp-ad">
-      <div data-ea-publisher="REPLACE_ME" data-ea-type="text" class="horizontal"></div>
-    </div>
+    <aside class="cp-support">
+      <p class="cp-support-lead">{T.lead}</p>
+      <p class="cp-support-body">{T.body}</p>
+      <p class="cp-support-cta">
+        <a href={GH}>{T.star}</a>
+        <span aria-hidden="true">·</span>
+        <a href={T.citeHref}>{T.cite}</a>
+      </p>
+    </aside>
 
     {/* Giscus comments (GitHub Discussions). Fill repo-id / category-id from giscus.app
-        after the repo is public and Discussions is enabled. */}
+        once Discussions is configured; until then the noscript fallback links the board. */}
     <section class="cp-comments" aria-label="Comments">
-      <h2>Comments & questions</h2>
+      <h2>{T.comments}</h2>
       <script
         src="https://giscus.app/client.js"
-        data-repo="contact993/xpsfit"
+        data-repo="contact993/corepeak"
         data-repo-id="REPLACE_ME"
         data-category="General"
         data-category-id="REPLACE_ME"
@@ -33,13 +65,12 @@ const isSplash = Astro.props.entry?.data?.template === 'splash';
         data-emit-metadata="0"
         data-input-position="top"
         data-theme="preferred_color_scheme"
-        data-lang="en"
+        data-lang={isKo ? 'ko' : 'en'}
         crossorigin="anonymous"
         async
       ></script>
       <noscript>
-        Comments are powered by GitHub Discussions —
-        <a href="https://github.com/contact993/xpsfit/discussions">open the board</a>.
+        {T.ns1}<a href={`${GH}/discussions`}>{T.nsLink}</a>.
       </noscript>
     </section>
   </div>
@@ -47,11 +78,18 @@ const isSplash = Astro.props.entry?.data?.template === 'splash';
 
 <style>
   .cp-extras { margin-top: 2rem; }
-  .cp-ad { margin: 1.5rem 0; min-height: 1px; }
+  .cp-support {
+    margin: 1.5rem 0;
+    border: 1px solid var(--sl-color-gray-5);
+    border-left: 3px solid var(--sl-color-accent);
+    border-radius: 0.5rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--sl-color-gray-6);
+  }
+  .cp-support-lead { margin: 0; font-weight: 600; font-size: var(--sl-text-base); }
+  .cp-support-body { margin: 0.3rem 0 0.6rem; font-size: var(--sl-text-sm); color: var(--sl-color-gray-2); }
+  .cp-support-cta { margin: 0; display: flex; gap: 0.7rem; align-items: center; flex-wrap: wrap; }
+  .cp-support-cta a { font-weight: 600; font-size: var(--sl-text-sm); }
   .cp-comments { margin-top: 2rem; border-top: 1px solid var(--sl-color-gray-5); padding-top: 1.5rem; }
   .cp-comments h2 { font-size: var(--sl-text-h4); margin-bottom: 1rem; }
 </style>
-
-{/* Enable after EthicalAds approval:
-<script is:inline async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
-*/}
