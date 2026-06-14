@@ -5,49 +5,67 @@ head:
   - tag: title
     content: "Corepeak — free XPS peak fitting for Mac & Windows"
 template: splash
-hero:
-  tagline: Free XPS peak fitting for Mac & Windows — and it tells you when your fit is wrong.
-  actions:
-    - text: Download
-      link: /download/
-      icon: down-caret
-      variant: primary
-    - text: View on GitHub
-      link: https://github.com/contact993/xpsfit
-      icon: external
-      variant: minimal
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+import shot from '../../assets/screenshot.png';
 
-**Corepeak** reproduces the familiar XPSPEAK 4.1 workflow with a modern interface, then goes
-further: it doesn't just let you fit X-ray photoelectron spectroscopy data — it **checks whether
-your fit is physically and statistically defensible**, and it knows the literature binding
-energies so you don't have to look them up.
+<div class="cp-hero cp-fullbleed">
+  <div class="cp-hero-inner">
+    <p class="cp-eyebrow">Free · Open source · macOS &amp; Windows</p>
+    <h1 class="cp-title">Fit XPS spectra — and know when your fit is <span class="cp-accent">wrong</span>.</h1>
+    <p class="cp-sub">
+      Corepeak is a free, cross-platform XPS peak-fitting app with a built-in <strong>fit auditor</strong>
+      and a citation-backed reference database. The modern replacement for XPSPEAK&nbsp;4.1.
+    </p>
+    <div class="cp-cta-row">
+      <a class="cp-btn cp-btn-primary" href="/corepeak/download/">↓ Download free</a>
+      <a class="cp-btn cp-btn-ghost" href="https://github.com/contact993/xpsfit">View on GitHub</a>
+    </div>
+    <p class="cp-note">No account · no peak limits · GPLv3</p>
+    <div class="cp-shot">
+      <img src={shot.src} width={shot.width} height={shot.height} alt="The Corepeak interface fitting a Ni 2p spectrum — reference database, peak table and fit auditor" />
+    </div>
+  </div>
+</div>
 
-![The Corepeak interface fitting a Ni 2p spectrum — reference database, peak table and fit auditor](../../assets/screenshot.png)
+<div class="cp-section">
+  <h2>Not just a fitter — a validator</h2>
+  <p class="cp-lead">Everything XPSPEAK did, on a modern Mac/Windows interface — plus the checks that keep your fits defensible.</p>
+  <div class="cp-features">
+    <div class="cp-card">
+      <div class="cp-ico">🔍</div>
+      <h3>Built-in fit auditor</h3>
+      <p>FWHM sanity, reference binding-energy checks, doublet integrity, lineshape, satellites, residual z-score, BIC, and a leave-one-out test that flags peaks the data doesn't require.</p>
+    </div>
+    <div class="cp-card">
+      <div class="cp-ico">📚</div>
+      <h3>Citation-backed database</h3>
+      <p>24 elements with binding energies, spin-orbit parameters and RSFs — every value with its literature source. One-click recipes; add your own references.</p>
+    </div>
+    <div class="cp-card">
+      <div class="cp-ico">🖥️</div>
+      <h3>Truly cross-platform</h3>
+      <p>Native macOS and Windows. No 5,000-point / 51-peak ceiling like XPSPEAK. No Python, no account, free forever.</p>
+    </div>
+    <div class="cp-card">
+      <div class="cp-ico">📥</div>
+      <h3>Imports everything</h3>
+      <p>.dat / .csv / .xlsx / .xls, Thermo Avantage multi-sheet, VAMAS, or paste two columns from Excel. KE→BE built in.</p>
+    </div>
+  </div>
+</div>
 
-<CardGrid stagger>
-  <Card title="🔍 Built-in fit auditor" icon="approve-check">
-    FWHM sanity, reference-DB binding-energy checks, doublet integrity, metallic-lineshape
-    asymmetry, expected satellites, residual z-score, BIC, and a leave-one-out
-    peak-necessity test that flags peaks the data doesn't actually require.
-  </Card>
-  <Card title="📚 Citation-backed database" icon="open-book">
-    24 elements with binding energies, spin-orbit parameters and RSFs — every value carries its
-    literature citation. One-click fitting recipes. Add your own references, kept across updates.
-  </Card>
-  <Card title="🖥️ Truly cross-platform" icon="laptop">
-    Native macOS and Windows. No 5,000-point / 51-peak ceiling like XPSPEAK. No Python install,
-    no account, free forever (GPLv3).
-  </Card>
-  <Card title="📥 Imports everything" icon="download">
-    .dat / .txt / .csv / .xlsx / .xls, Thermo Avantage multi-sheet exports, VAMAS, or paste two
-    columns straight from Excel/Origin. KE→BE conversion built in.
-  </Card>
-</CardGrid>
+<div class="cp-band cp-fullbleed">
+  <div class="cp-band-inner">
+    <div class="cp-ico">🔍</div>
+    <h2>Is your fit defensible?</h2>
+    <p class="cp-lead" style="margin-bottom:0;">A flat residual isn't enough. Corepeak's auditor runs the checks a careful reviewer would — and a statistical <strong>leave-one-out test</strong> that catches the "I added a peak and nothing changed" trap. <a href="/corepeak/guides/fit-audit/">See how it works →</a></p>
+  </div>
+</div>
 
-## The modern XPSPEAK replacement
+<div class="cp-section">
+  <h2>The modern XPSPEAK replacement</h2>
+  <p class="cp-lead">Honest comparison — Corepeak is the free, Mac-friendly, validation-focused option.</p>
 
 | | Corepeak | XPSPEAK 4.1 | CasaXPS | KherveFitting / LG4X |
 |---|---|---|---|---|
@@ -58,4 +76,13 @@ energies so you don't have to look them up.
 | One-click recipes | ✅ | ❌ | ✅ | ❌ |
 | Actively maintained | ✅ | ❌ (1999) | ✅ | ✅ |
 
-[Download Corepeak →](/download/) · [See all features →](/features/) · [How it compares →](/compare/)
+</div>
+
+<div class="cp-final cp-fullbleed">
+  <h2>Download Corepeak — free</h2>
+  <div class="cp-cta-row">
+    <a class="cp-btn cp-btn-primary" href="/corepeak/download/">↓ macOS &amp; Windows</a>
+    <a class="cp-btn cp-btn-ghost" href="/corepeak/features/">See all features</a>
+  </div>
+  <p class="cp-note">GPLv3 · cite-friendly · built by a researcher, for researchers</p>
+</div>
