@@ -350,7 +350,7 @@ def test_type_column_conversions(qapp):
     combo0 = w.peak_table.table.cellWidget(0, 0)
     assert combo0.currentText() == "Doublet"
     combo2 = w.peak_table.table.cellWidget(2, 0)
-    assert not combo2.isEnabled() and combo2.currentText() == "└ 짝"
+    assert not combo2.isEnabled() and combo2.currentText().startswith("└")
 
     # back to single removes the partner
     w.peak_table._convert_to_single(0)

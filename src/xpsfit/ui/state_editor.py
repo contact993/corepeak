@@ -7,6 +7,7 @@ from PySide6.QtWidgets import (
 )
 
 from .. import refdb
+from .i18n import t
 
 
 class StateEditorDialog(QDialog):
@@ -16,7 +17,7 @@ class StateEditorDialog(QDialog):
     def __init__(self, element: str = "", orbital: str = "",
                  state: dict | None = None, parent=None):
         super().__init__(parent)
-        self.setWindowTitle("내 레퍼런스 추가/수정")
+        self.setWindowTitle(t("Add / edit my reference", "내 레퍼런스 추가/수정"))
         self.resize(520, 0)
         lay = QVBoxLayout(self)
         info = QLabel("저장 위치: <code>~/.xpsfit/user_refdb.json</code> — 앱을 업데이트해도 유지되고, "

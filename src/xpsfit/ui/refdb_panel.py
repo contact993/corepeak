@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (
 )
 
 from .. import refdb
+from .i18n import t
 from ..core.spectrum import Peak
 from ..refdb import guess_element_orbital  # re-export (quantify_panel imports from here)
 
@@ -33,13 +34,16 @@ class RefDbPanel(QWidget):
         self.element_combo.currentIndexChanged.connect(self._fill_states)
         row.addWidget(self.element_combo)
         self.search = QLineEdit()
-        self.search.setPlaceholderText("상태 검색 (예: oxide)")
+        self.search.setPlaceholderText(t("Search states (e.g. oxide)", "상태 검색 (예: oxide)"))
         self.search.textChanged.connect(self._fill_states)
         row.addWidget(self.search)
         layout.addLayout(row)
 
-        src = QLabel("BE 값은 <b>문헌 레퍼런스</b>입니다 — 각 상태에 마우스를 올리면 출처가 표시됩니다. "
-                     "출판 전 인용 원문으로 확인하세요.")
+        src = QLabel(t(
+            "BE values are <b>literature references</b> — hover a state to see its source. "
+            "Verify against the cited source before publication.",
+            "BE 값은 <b>문헌 레퍼런스</b>입니다 — 각 상태에 마우스를 올리면 출처가 표시됩니다. "
+            "출판 전 인용 원문으로 확인하세요."))
         src.setWordWrap(True)
         src.setProperty("class", "subtle")
         layout.addWidget(src)
@@ -50,7 +54,7 @@ class RefDbPanel(QWidget):
         layout.addWidget(self.info)
 
         self.tree = QTreeWidget()
-        self.tree.setHeaderLabels(["Chemical state", "BE (eV)"])
+        self.tree.setHeaderLabels([t("Chemical state", "화학 상태"), "BE (eV)"])
         self.tree.setRootIsDecorated(False)
         self.tree.setAlternatingRowColors(True)
         self.tree.setUniformRowHeights(True)
@@ -67,28 +71,34 @@ class RefDbPanel(QWidget):
         layout.addWidget(self.ref_label)
 
         btns = QHBoxLayout()
-        self.btn_guide = QPushButton("가이드선 표시")
-        self.btn_guide.setToolTip("선택한 상태들의 BE 위치를 플롯에 점선으로 표시")
+        self.btn_guide = QPushButton(t("Show guide lines", "가이드선 표시"))
+        self.btn_guide.setToolTip(t("Mark the selected states' BE positions on the plot as dashed lines",
+                                    "선택한 상태들의 BE 위치를 플롯에 점선으로 표시"))
         self.btn_guide.clicked.connect(self._show_guides)
-        self.btn_clear = QPushButton("지우기")
+        self.btn_clear = QPushButton(t("Clear", "지우기"))
         self.btn_clear.clicked.connect(self.guidesCleared.emit)
         btns.addWidget(self.btn_guide)
         btns.addWidget(self.btn_clear)
         layout.addLayout(btns)
 
         btns_user = QHBoxLayout()
-        self.btn_add_state = QPushButton("＋ 내 레퍼런스")
-        self.btn_add_state.setToolTip("직접 참고하는 문헌의 BE/범위/출처를 DB에 추가합니다.\n"
-                                      "내장 항목과 같은 이름이면 내 값으로 덮어씁니다 (★).\n"
-                                      "저장: ~/.xpsfit/user_refdb.json — 앱 업데이트에도 유지")
-        self.btn_add_state.setStatusTip("내 레퍼런스 추가: 직접 쓰는 문헌값을 DB에 등록 (★ 표시)")
+        self.btn_add_state = QPushButton(t("＋ My reference", "＋ 내 레퍼런스"))
+        self.btn_add_state.setToolTip(t(
+            "Add a binding energy/range/source from a reference you use.\n"
+            "Same name as a built-in entry overrides it (★).\n"
+            "Saved to ~/.xpsfit/user_refdb.json — kept across updates.",
+            "직접 참고하는 문헌의 BE/범위/출처를 DB에 추가합니다.\n"
+            "내장 항목과 같은 이름이면 내 값으로 덮어씁니다 (★).\n"
+            "저장: ~/.xpsfit/user_refdb.json — 앱 업데이트에도 유지"))
         self.btn_add_state.clicked.connect(lambda: self._edit_state(new=True))
-        self.btn_edit_state = QPushButton("✎ 수정")
-        self.btn_edit_state.setStatusTip("선택한 상태를 내 값으로 수정해 저장 (내장 DB는 그대로, 오버레이로 덮음)")
+        self.btn_edit_state = QPushButton(t("✎ Edit", "✎ 수정"))
+        self.btn_edit_state.setToolTip(t("Edit the selected state with your own value (overlay; built-in DB kept)",
+                                         "선택한 상태를 내 값으로 수정해 저장 (내장 DB는 그대로, 오버레이로 덮음)"))
         self.btn_edit_state.clicked.connect(lambda: self._edit_state(new=False))
         self.btn_del_state = QPushButton("🗑")
         self.btn_del_state.setFixedWidth(40)
-        self.btn_del_state.setToolTip("선택한 ★(사용자) 항목 삭제 — 내장 항목이 있으면 복원됩니다")
+        self.btn_del_state.setToolTip(t("Delete the selected ★ (user) entry — a built-in one is restored if it exists",
+                                        "선택한 ★(사용자) 항목 삭제 — 내장 항목이 있으면 복원됩니다"))
         self.btn_del_state.clicked.connect(self._delete_state)
         btns_user.addWidget(self.btn_add_state)
         btns_user.addWidget(self.btn_edit_state)
@@ -96,11 +106,13 @@ class RefDbPanel(QWidget):
         layout.addLayout(btns_user)
 
         btns2 = QHBoxLayout()
-        self.btn_peak = QPushButton("피크 삽입")
-        self.btn_peak.setToolTip("선택한 상태의 BE에 단일 피크 삽입 (center는 문헌 범위로 제한)")
+        self.btn_peak = QPushButton(t("Insert peak", "피크 삽입"))
+        self.btn_peak.setToolTip(t("Insert a single peak at the selected state's BE (center bounded to the literature range)",
+                                   "선택한 상태의 BE에 단일 피크 삽입 (center는 문헌 범위로 제한)"))
         self.btn_peak.clicked.connect(self._insert_single)
-        self.btn_doublet = QPushButton("Doublet 삽입")
-        self.btn_doublet.setToolTip("spin-orbit 짝 피크를 splitting/면적비/FWHM constraint와 함께 삽입")
+        self.btn_doublet = QPushButton(t("Insert doublet", "Doublet 삽입"))
+        self.btn_doublet.setToolTip(t("Insert the spin-orbit pair with splitting / area-ratio / FWHM constraints",
+                                      "spin-orbit 짝 피크를 splitting/면적비/FWHM constraint와 함께 삽입"))
         self.btn_doublet.clicked.connect(self._insert_doublet)
         btns2.addWidget(self.btn_peak)
         btns2.addWidget(self.btn_doublet)
@@ -112,8 +124,9 @@ class RefDbPanel(QWidget):
             self.recipe_combo.addItem(r["name"], r)
         self.recipe_combo.currentIndexChanged.connect(self._recipe_info)
         rec_row.addWidget(self.recipe_combo, stretch=1)
-        self.btn_recipe = QPushButton("Recipe 삽입")
-        self.btn_recipe.setToolTip("문헌 기반 멀티피크 세트를 constraint와 함께 한 번에 삽입")
+        self.btn_recipe = QPushButton(t("Insert recipe", "Recipe 삽입"))
+        self.btn_recipe.setToolTip(t("Insert a literature-based multi-peak set with constraints in one click",
+                                     "문헌 기반 멀티피크 세트를 constraint와 함께 한 번에 삽입"))
         self.btn_recipe.clicked.connect(self._insert_recipe)
         rec_row.addWidget(self.btn_recipe)
         layout.addLayout(rec_row)

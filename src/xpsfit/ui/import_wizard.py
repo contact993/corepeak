@@ -17,6 +17,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..core.spectrum import Region
+from .i18n import t
 from ..io import importer
 
 DELIM_OPTIONS = [("자동/공백 (whitespace)", None), ("Tab", "\t"), ("Comma ,", ","), ("Semicolon ;", ";")]
@@ -37,7 +38,8 @@ class ImportWizard(QDialog):
         self.result_regions: list[Region] = []
         self.df: pd.DataFrame | None = None
         self.is_excel = bool(self.path) and importer.is_excel_file(self.path)
-        title = "Paste Data — 클립보드 붙여넣기" if self.paste_mode else f"Import — {self.path.name}"
+        title = (t("Paste Data — from clipboard", "데이터 붙여넣기 — 클립보드")
+                 if self.paste_mode else f"Import — {self.path.name}")
         self.setWindowTitle(title)
         self.resize(860, 680)
 
@@ -46,11 +48,13 @@ class ImportWizard(QDialog):
         layout.setSpacing(10)
 
         # --- parsing controls ---
-        parse_box = QGroupBox("1. 데이터 붙여넣기" if self.paste_mode else "1. 파일 파싱")
+        parse_box = QGroupBox(t("1. Paste data", "1. 데이터 붙여넣기") if self.paste_mode
+                              else t("1. Parse file", "1. 파일 파싱"))
         pl = QHBoxLayout(parse_box)
         if self.is_excel:
             pv = QVBoxLayout()
-            pv.addWidget(QLabel("가져올 시트 선택 — <b>체크한 시트가 각각 region</b>이 됩니다 (클릭 = 미리보기)"))
+            pv.addWidget(QLabel(t("Select sheets to import — <b>each checked sheet becomes a region</b> (click = preview)",
+                                  "가져올 시트 선택 — <b>체크한 시트가 각각 region</b>이 됩니다 (클릭 = 미리보기)")))
             self.sheet_list = QListWidget()
             self.sheet_list.setMaximumHeight(118)
             self._sheet_cache: dict[str, pd.DataFrame | None] = {}
@@ -92,7 +96,7 @@ class ImportWizard(QDialog):
                 self.sniffed = importer.sniff_text(text or "")
             else:
                 self.sniffed = importer.sniff(self.path)
-            pl.addWidget(QLabel("구분자:"))
+            pl.addWidget(QLabel(t("Delimiter:", "구분자:")))
             self.delim_combo = QComboBox()
             for name, val in DELIM_OPTIONS:
                 self.delim_combo.addItem(name, val)
@@ -100,7 +104,7 @@ class ImportWizard(QDialog):
             self.delim_combo.setCurrentIndex(idx)
             self.delim_combo.currentIndexChanged.connect(self._reparse)
             pl.addWidget(self.delim_combo)
-            pl.addWidget(QLabel("데이터 시작 행:"))
+            pl.addWidget(QLabel(t("Data starts at row:", "데이터 시작 행:")))
             self.skip_spin = QSpinBox()
             self.skip_spin.setRange(0, 999)
             self.skip_spin.setValue(self.sniffed.skip_rows)
@@ -143,19 +147,19 @@ class ImportWizard(QDialog):
         self.preview = QTableWidget(0, 0)
         self.preview.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self.preview.setFixedHeight(170)
-        layout.addWidget(QLabel("파싱 결과 미리보기 (앞 12행):"))
+        layout.addWidget(QLabel(t("Parsed preview (first 12 rows):", "파싱 결과 미리보기 (앞 12행):")))
         layout.addWidget(self.preview)
 
         # --- column mapping ---
-        map_box = QGroupBox("2. 열 선택")
+        map_box = QGroupBox(t("2. Select columns", "2. 열 선택"))
         ml = QHBoxLayout(map_box)
-        ml.addWidget(QLabel("X (에너지):"))
+        ml.addWidget(QLabel(t("X (energy):", "X (에너지):")))
         self.x_combo = QComboBox()
         ml.addWidget(self.x_combo)
-        ml.addWidget(QLabel("Y (강도):"))
+        ml.addWidget(QLabel(t("Y (intensity):", "Y (강도):")))
         self.y_combo = QComboBox()
         ml.addWidget(self.y_combo)
-        self.ke_check = QCheckBox("X는 Kinetic Energy (BE로 변환)")
+        self.ke_check = QCheckBox(t("X is Kinetic Energy (convert to BE)", "X는 Kinetic Energy (BE로 변환)"))
         self.ke_check.setToolTip("BE = hν − KE 로 변환합니다 (일함수 무시, 통상 관례)")
         ml.addWidget(self.ke_check)
         self.hv_combo = QComboBox()
@@ -179,7 +183,7 @@ class ImportWizard(QDialog):
 
         # --- region name ---
         name_row = QHBoxLayout()
-        name_row.addWidget(QLabel("Region 이름:"))
+        name_row.addWidget(QLabel(t("Region name:", "Region 이름:")))
         self.name_edit = QLineEdit("Pasted data" if self.paste_mode else self.path.stem)
         self.name_edit.setToolTip("예: 'Ni 2p' 처럼 원소+오비탈로 지으면 정량 패널이 자동 인식합니다")
         name_row.addWidget(self.name_edit)

@@ -18,6 +18,7 @@ from ..core.spectrum import BACKGROUND_TYPES, Region
 from ..io import export
 from .dialogs import BatchFitDialog
 from .help_panel import HelpPanel
+from .i18n import t
 from .import_wizard import ImportWizard
 from .peak_table import PeakTable
 from .plot_widget import SpectrumPlot, height_to_area
@@ -45,12 +46,13 @@ class MainWindow(QMainWindow):
         v.setSpacing(8)
         controls = QHBoxLayout()
         controls.setSpacing(8)
-        controls.addWidget(QLabel("Background:"))
+        controls.addWidget(QLabel(t("Background:", "백그라운드:")))
         self.bg_combo = QComboBox()
         for kind in BACKGROUND_TYPES:
             self.bg_combo.addItem(BG_LABELS[kind], kind)
         self.bg_combo.setCurrentText(BG_LABELS["SHIRLEY"])
-        self.bg_combo.setToolTip("백그라운드 모델 — 선택하면 Help 패널에 설명이 표시됩니다")
+        self.bg_combo.setToolTip(t("Background model — selecting one shows its help",
+                                   "백그라운드 모델 — 선택하면 Help 패널에 설명이 표시됩니다"))
         self.bg_combo.setStatusTip("백그라운드 종류 선택 (Shirley가 기본 — 자세한 설명은 도움말 탭)")
         self.bg_combo.currentIndexChanged.connect(self._bg_kind_changed)
         controls.addWidget(self.bg_combo)
@@ -82,60 +84,67 @@ class MainWindow(QMainWindow):
         controls.addWidget(self.tg_b)
         controls.addWidget(self.tg_c)
 
-        self.btn_fit_bg = QPushButton("Fit BG")
-        self.btn_fit_bg.setToolTip(
+        self.btn_fit_bg = QPushButton(t("Fit BG", "BG 맞춤"))
+        self.btn_fit_bg.setToolTip(t(
+            "Fit the background first, before adding peaks (step 1).\n"
+            "Tougaard: auto B · Shirley/Linear: set by endpoints (drag the lines)",
             "백그라운드만 데이터에 먼저 맞춥니다 (피크 추가 전 1단계).\n"
-            "Tougaard: B를 자동 결정 · Shirley/Linear: 끝점으로 자동 결정(세로선 조절)")
-        self.btn_fit_bg.setStatusTip("Fit BG: 피크를 넣기 전에 백그라운드만 먼저 데이터에 맞춥니다")
+            "Tougaard: B를 자동 결정 · Shirley/Linear: 끝점으로 자동 결정(세로선 조절)"))
         self.btn_fit_bg.clicked.connect(self._fit_bg)
         controls.addWidget(self.btn_fit_bg)
 
-        self.bg_active_check = QCheckBox("BG 동시 fit")
-        self.bg_active_check.setToolTip(
+        self.bg_active_check = QCheckBox(t("Co-fit BG", "BG 동시 fit"))
+        self.bg_active_check.setToolTip(t(
+            "Active Shirley: derive the background from the peak model and optimise it with the peaks.\n"
+            "Less sensitive to noise — turn on when a plain Shirley looks wrong.",
             "Active Shirley (Sherwood 방식): 백그라운드를 피크 모델에서 유도해 피크와 함께 최적화합니다.\n"
-            "노이즈와 창 안의 다른 구조에 덜 민감 — 일반 Shirley로 백그라운드가 이상할 때 켜 보세요.")
-        self.bg_active_check.setStatusTip("BG 동시 fit: Fit Region 때 Shirley 백그라운드를 피크와 함께 최적화")
+            "노이즈와 창 안의 다른 구조에 덜 민감 — 일반 Shirley로 백그라운드가 이상할 때 켜 보세요."))
         self.bg_active_check.toggled.connect(self._bg_active_toggled)
         controls.addWidget(self.bg_active_check)
 
-        self.btn_reset_range = QPushButton("↔ Range reset")
-        self.btn_reset_range.setToolTip("백그라운드/fitting 범위를 전체 데이터로 되돌립니다 (자르기 취소)")
-        self.btn_reset_range.setStatusTip("Range reset: 잘라낸 범위를 취소하고 전체 데이터로 복귀")
+        self.btn_reset_range = QPushButton(t("↔ Range reset", "↔ 범위 초기화"))
+        self.btn_reset_range.setToolTip(t("Reset the background/fit range to the full data (undo cropping)",
+                                          "백그라운드/fitting 범위를 전체 데이터로 되돌립니다 (자르기 취소)"))
         self.btn_reset_range.clicked.connect(self._reset_range)
         controls.addWidget(self.btn_reset_range)
         controls.addStretch(1)
 
-        self.btn_fit_peak = QPushButton("Optimise Peak")
-        self.btn_fit_peak.setToolTip("선택한 피크만 최적화 (나머지는 고정) — XPSPEAK의 Optimise Peak")
-        self.btn_fit_peak.setStatusTip("Optimise Peak: 테이블에서 선택한 피크 하나만 최적화")
+        self.btn_fit_peak = QPushButton(t("Optimise Peak", "선택 피크 최적화"))
+        self.btn_fit_peak.setToolTip(t("Optimise only the selected peak (others fixed)",
+                                       "선택한 피크만 최적화 (나머지는 고정) — XPSPEAK의 Optimise Peak"))
         self.btn_fit_peak.clicked.connect(self._fit_selected_peak)
-        self.btn_fit = QPushButton("⚡ Fit Region")
+        self.btn_fit = QPushButton(t("⚡ Fit Region", "⚡ Region 피팅"))
         self.btn_fit.setObjectName("primary")
-        self.btn_fit.setToolTip("현재 region의 모든 피크를 constraint대로 최적화 (수렴까지 자동 반복)")
-        self.btn_fit.setStatusTip("Fit Region: 모든 피크를 수렴할 때까지 반복 최적화")
+        self.btn_fit.setToolTip(t("Optimise all peaks under their constraints (repeats until converged)",
+                                  "현재 region의 모든 피크를 constraint대로 최적화 (수렴까지 자동 반복)"))
         self.btn_fit.clicked.connect(self._fit_region)
-        self.btn_fit_all = QPushButton("Fit All")
-        self.btn_fit_all.setToolTip("모든 region을 순서대로 최적화 — XPSPEAK의 Optimise All Regions")
-        self.btn_fit_all.setStatusTip("Fit All: 모델이 있는 모든 region을 차례로 최적화")
+        self.btn_fit_all = QPushButton(t("Fit All", "전체 피팅"))
+        self.btn_fit_all.setToolTip(t("Optimise every region in turn",
+                                      "모든 region을 순서대로 최적화 — XPSPEAK의 Optimise All Regions"))
         self.btn_fit_all.clicked.connect(self._fit_all)
-        self.btn_diagnose = QPushButton("🔍 진단")
-        self.btn_diagnose.setToolTip(
+        self.btn_diagnose = QPushButton(t("🔍 Audit", "🔍 진단"))
+        self.btn_diagnose.setToolTip(t(
+            "Comprehensive fit audit — the checks a reviewer would run:\n"
+            "· FWHM sanity / parameters stuck at bounds\n"
+            "· each peak's BE vs the reference DB (unknown states flagged)\n"
+            "· doublet partner / splitting / area ratio vs theory\n"
+            "· metallic asymmetry / missing satellites\n"
+            "· over-fit signals (overlap, <1% components, zero area)\n"
+            "· C 1s charge referencing · residual stats (z + ΔBIC)",
             "Fitting 종합 감사 — 리뷰어가 보는 항목을 자동 점검합니다:\n"
             "· FWHM 물리성 / 파라미터가 경계에 붙었는지\n"
             "· 각 피크의 BE를 레퍼런스 DB와 대조 (모르는 상태 지적)\n"
             "· doublet 짝 존재·간격·면적비 vs 이론값\n"
             "· 금속 상태의 비대칭 라인섀입 / satellite 누락\n"
             "· 과적합 신호 (겹친 피크, 1% 미만 성분, 면적 0)\n"
-            "· C 1s 대전 보정 상태 · 잔차 통계(z + ΔBIC)")
-        self.btn_diagnose.setStatusTip("진단: FWHM·레퍼런스·doublet·라인섀입·satellite·잔차를 종합 감사")
+            "· C 1s 대전 보정 상태 · 잔차 통계(z + ΔBIC)"))
         self.btn_diagnose.clicked.connect(self._diagnose)
-        self.btn_export = QPushButton("Export ▾")
-        self.btn_export.setStatusTip("Export: 파라미터 CSV · 곡선 CSV · 전체 Excel · 논문용 그림 저장")
+        self.btn_export = QPushButton(t("Export ▾", "내보내기 ▾"))
         export_menu = QMenu(self)
-        export_menu.addAction("Peak parameters (CSV)…", self.export_params)
-        export_menu.addAction("Fitted curves (CSV)…", self.export_curves)
-        export_menu.addAction("All regions (Excel)…", self.export_excel)
-        export_menu.addAction("Figure (PNG/SVG/PDF)…", self.export_figure)
+        export_menu.addAction(t("Peak parameters (CSV)…", "피크 파라미터 (CSV)…"), self.export_params)
+        export_menu.addAction(t("Fitted curves (CSV)…", "피팅 곡선 (CSV)…"), self.export_curves)
+        export_menu.addAction(t("All regions (Excel)…", "전체 region (Excel)…"), self.export_excel)
+        export_menu.addAction(t("Figure (PNG/SVG/PDF)…", "그림 (PNG/SVG/PDF)…"), self.export_figure)
         self.btn_export.setMenu(export_menu)
         for b in (self.btn_fit_peak, self.btn_fit, self.btn_fit_all,
                   self.btn_diagnose, self.btn_export):
@@ -159,24 +168,23 @@ class MainWindow(QMainWindow):
         ll.setContentsMargins(2, 2, 2, 2)
         ll.addWidget(self.region_list)
         lb = QHBoxLayout()
-        b_imp = QPushButton("＋ Import")
-        b_imp.setStatusTip("Import: 데이터 파일(.dat/.txt/.csv/.xlsx/.xls/.vms)을 불러옵니다")
+        b_imp = QPushButton(t("＋ Import", "＋ 불러오기"))
         b_imp.clicked.connect(self.import_data)
-        b_paste = QPushButton("📋 Paste")
-        b_paste.setToolTip("클립보드의 표 데이터(엑셀에서 복사한 BE/강도 열)를 새 region으로")
-        b_paste.setStatusTip("Paste: 엑셀에서 복사한 데이터를 붙여넣어 region 생성 (⌘⇧V)")
+        b_paste = QPushButton(t("📋 Paste", "📋 붙여넣기"))
+        b_paste.setToolTip(t("Paste table data copied from Excel (BE/intensity columns) as a new region",
+                             "클립보드의 표 데이터(엑셀에서 복사한 BE/강도 열)를 새 region으로"))
         b_paste.clicked.connect(self.paste_data)
         b_del = QPushButton("－")
         b_del.setFixedWidth(36)
-        b_del.setToolTip("선택한 region 삭제")
+        b_del.setToolTip(t("Delete the selected region", "선택한 region 삭제"))
         b_del.clicked.connect(self._remove_region)
         lb.addWidget(b_imp)
         lb.addWidget(b_paste)
         lb.addWidget(b_del)
         ll.addLayout(lb)
 
-        # --- BE shift (대전 보정): ±값을 정해 전체/선택 region에 일괄 적용 ---
-        shift_label = QLabel("BE Shift (대전 보정)")
+        # --- BE shift (charge correction): apply ± to all/selected regions ---
+        shift_label = QLabel(t("BE Shift (charge correction)", "BE Shift (대전 보정)"))
         shift_label.setProperty("class", "subtle")
         ll.addWidget(shift_label)
         sr1 = QHBoxLayout()
@@ -185,26 +193,27 @@ class MainWindow(QMainWindow):
         self.shift_spin.setDecimals(2)
         self.shift_spin.setSingleStep(0.05)
         self.shift_spin.setSuffix(" eV")
-        self.shift_spin.setToolTip("적용할 시프트 (+면 고BE 쪽으로). 예: C-C가 285.10에 나왔으면 -0.30")
+        self.shift_spin.setToolTip(t("Shift to apply (+ = toward higher BE). e.g. if C-C is at 285.10, use -0.30",
+                                     "적용할 시프트 (+면 고BE 쪽으로). 예: C-C가 285.10에 나왔으면 -0.30"))
         sr1.addWidget(self.shift_spin, stretch=1)
         b_auto = QPushButton("C-C→284.8")
-        b_auto.setToolTip("fitting된 adventitious C-C 피크(284.8 근처, 최대 면적)를 찾아\n필요한 시프트를 자동 계산해 채웁니다. C 1s를 먼저 피크분리하세요.")
-        b_auto.setStatusTip("C-C→284.8: fitting된 C-C 피크로부터 필요한 시프트를 자동 계산")
+        b_auto.setToolTip(t("Find the fitted adventitious C-C peak (near 284.8, largest area) and auto-fill the shift. Fit C 1s first.",
+                            "fitting된 adventitious C-C 피크(284.8 근처, 최대 면적)를 찾아\n필요한 시프트를 자동 계산해 채웁니다. C 1s를 먼저 피크분리하세요."))
         b_auto.clicked.connect(self._auto_shift_from_c1s)
         sr1.addWidget(b_auto)
         ll.addLayout(sr1)
         sr2 = QHBoxLayout()
-        self.shift_all_check = QCheckBox("전체 적용")
+        self.shift_all_check = QCheckBox(t("Apply to all", "전체 적용"))
         self.shift_all_check.setChecked(True)
-        self.shift_all_check.setToolTip("끄면 위 목록에서 선택(⌘클릭으로 복수 선택)한 region에만 적용")
+        self.shift_all_check.setToolTip(t("Uncheck to apply only to regions selected above (⌘-click for multiple)",
+                                          "끄면 위 목록에서 선택(⌘클릭으로 복수 선택)한 region에만 적용"))
         sr2.addWidget(self.shift_all_check)
-        b_shift = QPushButton("Shift 적용")
-        b_shift.setStatusTip("Shift 적용: 위의 ± 값을 전체(또는 선택한) region의 BE축에 적용")
+        b_shift = QPushButton(t("Apply shift", "Shift 적용"))
         b_shift.clicked.connect(self._apply_shift)
         sr2.addWidget(b_shift, stretch=1)
         ll.addLayout(sr2)
 
-        dock_regions = QDockWidget("Regions", self)
+        dock_regions = QDockWidget(t("Regions", "Region 목록"), self)
         dock_regions.setWidget(left)
         dock_regions.setFeatures(QDockWidget.DockWidgetFeature.DockWidgetMovable)
         self.addDockWidget(Qt.DockWidgetArea.LeftDockWidgetArea, dock_regions)
@@ -213,7 +222,7 @@ class MainWindow(QMainWindow):
         self.peak_table = PeakTable()
         self.peak_table.modelChanged.connect(self._model_edited)
         self.peak_table.peakSelected.connect(self.plot.highlight_component)
-        dock_table = QDockWidget("Peaks", self)
+        dock_table = QDockWidget(t("Peaks", "피크"), self)
         dock_table.setWidget(self.peak_table)
         dock_table.setFeatures(QDockWidget.DockWidgetFeature.DockWidgetMovable)
         self.addDockWidget(Qt.DockWidgetArea.BottomDockWidgetArea, dock_table)
@@ -228,11 +237,11 @@ class MainWindow(QMainWindow):
         self.help_panel = HelpPanel()
         self.quantify_panel = QuantifyPanel()
         tabs = QTabWidget()
-        tabs.addTab(self.refdb_panel, "Reference DB")
-        tabs.addTab(self.help_panel, "도움말")
-        tabs.addTab(self.quantify_panel, "Quantify")
+        tabs.addTab(self.refdb_panel, t("Reference DB", "레퍼런스 DB"))
+        tabs.addTab(self.help_panel, t("Help", "도움말"))
+        tabs.addTab(self.quantify_panel, t("Quantify", "정량"))
         self.right_tabs = tabs
-        dock_right = QDockWidget("Reference / Help", self)
+        dock_right = QDockWidget(t("Reference / Help", "레퍼런스 / 도움말"), self)
         dock_right.setWidget(tabs)
         dock_right.setFeatures(QDockWidget.DockWidgetFeature.DockWidgetMovable)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, dock_right)
@@ -242,39 +251,64 @@ class MainWindow(QMainWindow):
         self.resizeDocks([dock_table], [250], Qt.Orientation.Vertical)
 
         self._build_menu()
-        self.statusBar().showMessage("Import data to begin — File ▸ Import Data…")
+        self.statusBar().showMessage(t("Import data to begin — File ▸ Import Data…",
+                                       "데이터를 불러와 시작하세요 — File ▸ Import Data…"))
 
     # ---------- menu ----------
 
     def _build_menu(self) -> None:
-        m_file = self.menuBar().addMenu("&File")
-        self._add_action(m_file, "Import Data…", self.import_data, QKeySequence.StandardKey.Open)
-        self._add_action(m_file, "Paste Data (클립보드)…", self.paste_data, "Ctrl+Shift+V")
-        self._add_action(m_file, "Open Project…", self.open_project)
-        self._add_action(m_file, "Save Project", self.save_project, QKeySequence.StandardKey.Save)
-        self._add_action(m_file, "Save Project As…", lambda: self.save_project(force_dialog=True))
+        m_file = self.menuBar().addMenu(t("&File", "파일(&F)"))
+        self._add_action(m_file, t("Import Data…", "데이터 불러오기…"), self.import_data, QKeySequence.StandardKey.Open)
+        self._add_action(m_file, t("Paste Data (clipboard)…", "데이터 붙여넣기 (클립보드)…"), self.paste_data, "Ctrl+Shift+V")
+        self._add_action(m_file, t("Open Project…", "프로젝트 열기…"), self.open_project)
+        self._add_action(m_file, t("Save Project", "프로젝트 저장"), self.save_project, QKeySequence.StandardKey.Save)
+        self._add_action(m_file, t("Save Project As…", "다른 이름으로 저장…"), lambda: self.save_project(force_dialog=True))
         m_file.addSeparator()
-        m_export = m_file.addMenu("Export")
-        self._add_action(m_export, "Peak parameters (CSV)…", self.export_params)
-        self._add_action(m_export, "Fitted curves (CSV)…", self.export_curves)
-        self._add_action(m_export, "All regions (Excel)…", self.export_excel)
-        self._add_action(m_export, "Figure (PNG/SVG/PDF)…", self.export_figure)
+        m_export = m_file.addMenu(t("Export", "내보내기"))
+        self._add_action(m_export, t("Peak parameters (CSV)…", "피크 파라미터 (CSV)…"), self.export_params)
+        self._add_action(m_export, t("Fitted curves (CSV)…", "피팅 곡선 (CSV)…"), self.export_curves)
+        self._add_action(m_export, t("All regions (Excel)…", "전체 region (Excel)…"), self.export_excel)
+        self._add_action(m_export, t("Figure (PNG/SVG/PDF)…", "그림 (PNG/SVG/PDF)…"), self.export_figure)
         m_file.addSeparator()
-        self._add_action(m_file, "Quit", self.close, QKeySequence.StandardKey.Quit)
+        self._add_action(m_file, t("Quit", "종료"), self.close, QKeySequence.StandardKey.Quit)
 
-        m_tools = self.menuBar().addMenu("&Tools")
-        self._add_action(m_tools, "Batch Fit (여러 파일 동일 모델)…", self.batch_fit)
+        m_tools = self.menuBar().addMenu(t("&Tools", "도구(&T)"))
+        self._add_action(m_tools, t("Batch Fit (same model, many files)…", "배치 피팅 (여러 파일 동일 모델)…"), self.batch_fit)
 
-        m_help = self.menuBar().addMenu("&Help")
-        self._add_action(m_help, "권장 Fitting 절차", lambda: self._show_help("workflow"))
-        self._add_action(m_help, "백그라운드 설명", lambda: self._show_help("background"))
+        m_help = self.menuBar().addMenu(t("&Help", "도움말(&H)"))
+        self._add_action(m_help, t("Recommended fitting workflow", "권장 Fitting 절차"), lambda: self._show_help("workflow"))
+        self._add_action(m_help, t("About backgrounds", "백그라운드 설명"), lambda: self._show_help("background"))
         m_help.addSeparator()
-        self._add_action(m_help, "💬 피드백 보내기 / 버그 신고", lambda: self._open_url("/issues/new/choose"))
-        self._add_action(m_help, "📚 레퍼런스 값 제보", lambda: self._open_url(
+        m_lang = m_help.addMenu(t("Language", "언어 (Language)"))
+        from .i18n import LANGUAGES, current_language
+        for code, label in LANGUAGES.items():
+            act = self._add_action(m_lang, label, lambda _=False, c=code: self._set_language(c))
+            act.setCheckable(True)
+            act.setChecked(current_language() == code)
+        m_help.addSeparator()
+        self._add_action(m_help, t("💬 Send feedback / report a bug", "💬 피드백 보내기 / 버그 신고"),
+                         lambda: self._open_url("/issues/new/choose"))
+        self._add_action(m_help, t("📚 Submit a reference value", "📚 레퍼런스 값 제보"), lambda: self._open_url(
             "/issues/new?template=reference_submission.yml"))
-        self._add_action(m_help, "❤️ 개발 지원 (후원)", lambda: self._open_url("#sponsor", sponsor=True))
+        self._add_action(m_help, t("❤️ Support development (sponsor)", "❤️ 개발 지원 (후원)"),
+                         lambda: self._open_url("#sponsor", sponsor=True))
         m_help.addSeparator()
-        self._add_action(m_help, "About", self._about)
+        self._add_action(m_help, t("About", "정보"), self._about)
+
+    def _set_language(self, code: str) -> None:
+        from PySide6.QtWidgets import QMessageBox
+        from .i18n import current_language, restart_app, set_language
+        if code == current_language():
+            return
+        set_language(code)
+        box = QMessageBox(self)
+        box.setWindowTitle(t("Language", "언어"))
+        box.setText(t("Language changed. Restart to apply.", "언어가 변경되었습니다. 재시작하면 적용됩니다."))
+        restart_btn = box.addButton(t("Restart now", "지금 재시작"), QMessageBox.ButtonRole.AcceptRole)
+        box.addButton(t("Later", "나중에"), QMessageBox.ButtonRole.RejectRole)
+        box.exec()
+        if box.clickedButton() is restart_btn:
+            restart_app()
 
     def _add_action(self, menu, text, slot, shortcut=None) -> QAction:
         act = QAction(text, self)

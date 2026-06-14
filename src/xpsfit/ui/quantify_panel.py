@@ -8,20 +8,22 @@ from PySide6.QtWidgets import (
 )
 
 from .. import refdb
+from .i18n import t
 from ..core.quantify import QuantEntry, atomic_percent, region_total_area
 from ..core.session import Session
 from .refdb_panel import guess_element_orbital
 
 
 class QuantifyPanel(QWidget):
-    HEADERS = ["Region", "Element", "Area (Σpeaks)", "RSF", "Atomic %"]
+    HEADERS = ["Region", t("Element", "원소"), "Area (Σpeaks)", "RSF", "Atomic %"]
 
     def __init__(self, parent=None):
         super().__init__(parent)
         layout = QVBoxLayout(self)
         layout.setContentsMargins(10, 10, 10, 10)
         layout.setSpacing(8)
-        note = QLabel("RSF 기본값 = Scofield 단면적 (C 1s=1). 장비 RSF가 있으면 셀에서 직접 수정 후 다시 계산.")
+        note = QLabel(t("RSF default = Scofield cross-section (C 1s=1). Edit a cell to use your instrument's RSF, then recompute.",
+                        "RSF 기본값 = Scofield 단면적 (C 1s=1). 장비 RSF가 있으면 셀에서 직접 수정 후 다시 계산."))
         note.setWordWrap(True)
         note.setProperty("class", "note")
         layout.addWidget(note)
@@ -33,7 +35,7 @@ class QuantifyPanel(QWidget):
         self.table.verticalHeader().setVisible(False)
         self.table.verticalHeader().setDefaultSectionSize(30)
         layout.addWidget(self.table, stretch=1)
-        self.btn = QPushButton("다시 계산")
+        self.btn = QPushButton(t("Recompute", "다시 계산"))
         self.btn.clicked.connect(self.recompute)
         layout.addWidget(self.btn)
         self.session: Session | None = None

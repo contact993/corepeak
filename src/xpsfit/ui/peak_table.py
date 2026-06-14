@@ -15,6 +15,7 @@ from PySide6.QtWidgets import (
 
 from ..core import fitting
 from ..core.spectrum import PEAK_SHAPES, ParamSpec, Peak, Region
+from .i18n import t
 
 PARAM_COLS = [("center", "Center (eV)"), ("fwhm", "FWHM (eV)"), ("area", "Area"),
               ("mix", "%L-G"), ("asym", "Asym")]
@@ -138,8 +139,9 @@ class PeakTable(QWidget):
     modelChanged = Signal()  # any parameter/peak-list change
     peakSelected = Signal(int)
 
-    HEADERS = ["Type", "📌", "Label", "Shape", "Center", "FWHM", "Area", "Area %", "%L-G", "Asym", "Link", ""]
-    KIND_LABEL = {"single": "단일", "doublet_main": "Doublet", "satellite": "Satellite"}
+    HEADERS = [t("Type", "종류"), "📌", t("Label", "이름"), "Shape", "Center", "FWHM",
+               "Area", "Area %", "%L-G", "Asym", t("Link", "링크"), ""]
+    KIND_LABEL = {"single": t("Single", "단일"), "doublet_main": "Doublet", "satellite": "Satellite"}
     COL_TYPE, COL_PIN, COL_LABEL, COL_SHAPE, COL_CENTER, COL_FWHM, COL_AREA = 0, 1, 2, 3, 4, 5, 6
     COL_FRAC, COL_MIX, COL_ASYM, COL_LINK = 7, 8, 9, 10
 
@@ -166,27 +168,29 @@ class PeakTable(QWidget):
         self.table.cellChanged.connect(self._cell_changed)
         self.table.currentCellChanged.connect(lambda r, *_: self.peakSelected.emit(r) if r >= 0 else None)
 
-        self.btn_add_doublet = QPushButton("＋ Doublet")
+        self.btn_add_doublet = QPushButton(t("＋ Doublet", "＋ Doublet"))
         self.btn_add_doublet.setToolTip(
             "spin-orbit 짝 피크를 한 번에 추가합니다 — 간격·면적비·FWHM이 이론값으로 자동 고정.\n"
             "p/d/f 오비탈의 주성분은 반드시 이걸로 추가하세요 (자유 피크 2개로 두면\n"
             "옵티마이저가 doublet 구조를 모른 채 제멋대로 배치합니다).")
         self.btn_add_doublet.clicked.connect(self._add_doublet)
-        btn_add = QPushButton("＋ Peak")
-        btn_add.setToolTip("구속 없는 단일 피크 추가 — satellite, s 오비탈, 기타 성분용.\n"
-                           "p/d/f 주성분에는 ＋ Doublet을 쓰세요.")
-        btn_add.setStatusTip("＋ Peak: 단일 자유 피크 추가 (satellite·s 오비탈용)")
+        btn_add = QPushButton(t("＋ Peak", "＋ 피크"))
+        btn_add.setToolTip(t("Add a single unconstrained peak — for satellites, s orbitals, etc.\n"
+                             "Use ＋ Doublet for p/d/f main components.",
+                             "구속 없는 단일 피크 추가 — satellite, s 오비탈, 기타 성분용.\n"
+                             "p/d/f 주성분에는 ＋ Doublet을 쓰세요."))
         btn_add.clicked.connect(self._add_peak)
-        btn_del = QPushButton("－ Delete")
-        btn_del.setToolTip("선택한 피크 삭제 (다른 피크의 관계식 번호는 자동 보정)")
-        btn_del.setStatusTip("－ Delete: 테이블에서 선택한 피크를 삭제합니다")
+        btn_del = QPushButton(t("－ Delete", "－ 삭제"))
+        btn_del.setToolTip(t("Delete the selected peak (other peaks' expression indices auto-adjust)",
+                             "선택한 피크 삭제 (다른 피크의 관계식 번호는 자동 보정)"))
         btn_del.clicked.connect(self._delete_peak)
-        btn_free = QPushButton("🔓 Free")
-        btn_free.setToolTip("선택한 피크의 관계식·고정·범위 제한을 모두 해제합니다.\n"
-                            "이론값(doublet 간격·비율 포함)이 데이터와 안 맞을 때 사용 —\n"
-                            "해제 후에는 비율이 비물리적으로 갈 수 있으니 결과를 꼭 확인하세요.")
-        btn_free.setStatusTip("🔓 Free: 선택한 피크의 관계식·고정·범위를 모두 해제 "
-                              "(이론값이 데이터와 안 맞을 때 — 해제 내역은 여기 상태바에 표시됩니다)")
+        btn_free = QPushButton(t("🔓 Free", "🔓 해제"))
+        btn_free.setToolTip(t("Drop all constraints/fixes/bounds on the selected peak.\n"
+                              "Use when theory values (doublet splitting/ratio) don't match the data —\n"
+                              "ratios can go unphysical afterward, so check the result.",
+                              "선택한 피크의 관계식·고정·범위 제한을 모두 해제합니다.\n"
+                              "이론값(doublet 간격·비율 포함)이 데이터와 안 맞을 때 사용 —\n"
+                              "해제 후에는 비율이 비물리적으로 갈 수 있으니 결과를 꼭 확인하세요."))
         btn_free.clicked.connect(self._free_peak)
 
         top = QHBoxLayout()
@@ -282,12 +286,12 @@ class PeakTable(QWidget):
     def _make_type_combo(self, row: int, p: Peak) -> None:
         combo = QComboBox()
         if p.kind == "doublet_partner":
-            combo.addItem("└ 짝")
+            combo.addItem(t("└ partner", "└ 짝"))
             combo.setEnabled(False)
             combo.setToolTip("Doublet 짝 — 간격·면적비·FWHM이 주피크에 묶여 있습니다.\n"
                              "풀려면 주피크를 '단일'로 바꾸거나 🔓 Free를 쓰세요.")
         else:
-            combo.addItems(["단일", "Doublet", "Satellite"])
+            combo.addItems([t("Single", "단일"), "Doublet", "Satellite"])
             combo.setCurrentText(self.KIND_LABEL.get(p.kind, "단일"))
             combo.setToolTip("이 피크의 역할:\n"
                              "· Doublet — spin-orbit 짝을 자동 생성 (간격·면적비·FWHM 고정)\n"

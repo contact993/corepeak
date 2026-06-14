@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
 )
 
 from ..core import batch
+from .i18n import t
 from ..core.spectrum import Region
 from ..io import importer
 

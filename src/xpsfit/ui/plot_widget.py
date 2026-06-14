@@ -12,6 +12,7 @@ from PySide6.QtGui import QColor
 
 from ..core import fitting, lineshapes
 from ..core.spectrum import Region
+from .i18n import t
 
 pg.setConfigOptions(antialias=True, background="w", foreground="k")
 
@@ -43,10 +44,10 @@ class SpectrumPlot(pg.GraphicsLayoutWidget):
                 ax = p.getAxis(side)
                 ax.setPen(axis_pen)
                 ax.setTextPen(text_pen)
-        self.main.setLabel("left", "Intensity", units="counts",
+        self.main.setLabel("left", t("Intensity", "강도"), units="counts",
                            color="#5b6b7e", **{"font-size": "12pt"})
-        self.resid.setLabel("left", "Residual (Data−Fit)", color="#5b6b7e")
-        self.resid.setLabel("bottom", "Binding energy", units="eV",
+        self.resid.setLabel("left", t("Residual (Data−Fit)", "잔차 (Data−Fit)"), color="#5b6b7e")
+        self.resid.setLabel("bottom", t("Binding energy", "결합에너지"), units="eV",
                             color="#5b6b7e", **{"font-size": "12pt"})
 
         self.data_item = self.main.plot([], [], pen=None, symbol="o", symbolSize=4.5,

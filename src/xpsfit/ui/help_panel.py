@@ -5,16 +5,20 @@ from pathlib import Path
 
 from PySide6.QtWidgets import QComboBox, QTextBrowser, QVBoxLayout, QWidget
 
+from .i18n import t
+
 _DIR = Path(__file__).parent.parent / "refdb" / "explanations"
 
+# Explanation bodies are in Korean; English users get English topic titles here
+# and full English guides on the website (contact993.github.io/corepeak).
 TOPICS = [
-    ("백그라운드 — Shirley/Tougaard/Linear", "backgrounds.md"),
-    ("라인섀입 — GL 믹스·비대칭", "lineshapes.md"),
-    ("Constraint — doublet·FWHM 링크", "constraints.md"),
-    ("Satellite 피크 — shake-up·plasmon", "satellites.md"),
-    ("대전 보정 (C 1s 284.8)", "charge_referencing.md"),
-    ("권장 Fitting 절차 & 흔한 오류", "workflow.md"),
-    ("정량 분석 (RSF·atomic %)", "quantification.md"),
+    (t("Backgrounds — Shirley/Tougaard/Linear", "백그라운드 — Shirley/Tougaard/Linear"), "backgrounds.md"),
+    (t("Lineshapes — GL mix / asymmetry", "라인섀입 — GL 믹스·비대칭"), "lineshapes.md"),
+    (t("Constraints — doublet / FWHM link", "Constraint — doublet·FWHM 링크"), "constraints.md"),
+    (t("Satellites — shake-up / plasmon", "Satellite 피크 — shake-up·plasmon"), "satellites.md"),
+    (t("Charge referencing (C 1s 284.8)", "대전 보정 (C 1s 284.8)"), "charge_referencing.md"),
+    (t("Recommended workflow & common errors", "권장 Fitting 절차 & 흔한 오류"), "workflow.md"),
+    (t("Quantification (RSF / atomic %)", "정량 분석 (RSF·atomic %)"), "quantification.md"),
 ]
 
 CONTEXT_TO_TOPIC = {
