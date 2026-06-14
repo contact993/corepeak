@@ -1,0 +1,35 @@
+name: "🐞 Bug report"
+description: "Something doesn't work as expected"
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Import …
+        2. Insert recipe …
+        3. Fit Region …
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options: ["macOS (Apple Silicon)", "macOS (Intel)", "Windows 10/11", "Other"]
+    validations: { required: true }
+  - type: input
+    id: version
+    attributes:
+      label: XPS Fitter version
+      placeholder: "e.g. 0.1.0 (see Help ▸ About)"
+  - type: textarea
+    id: data
+    attributes:
+      label: Data file / screenshot (optional)
+      description: Attaching a small sample data file or a screenshot helps a lot.

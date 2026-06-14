@@ -1,0 +1,24 @@
+name: "💡 Feature request"
+description: "Suggest a feature or improvement"
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: "For open-ended ideas or to vote on what's next, the [Discussions](https://github.com/contact993/xpsfit/discussions) board is often a better fit."
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the analysis pain point, not just the feature.
+    validations: { required: true }
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed feature
+    validations: { required: true }
+  - type: input
+    id: tool
+    attributes:
+      label: Does another tool do this? (optional)
+      placeholder: "e.g. CasaXPS does X by …"

@@ -1,0 +1,37 @@
+XPS Fitter — Third-Party Licenses
+=================================
+
+XPS Fitter is distributed under the GNU General Public License v3.0 (see LICENSE).
+It builds on the following open-source components, each under its own license.
+All are compatible with distributing XPS Fitter as a GPLv3 application.
+
+Qt for Python (PySide6) ........ LGPL v3.0
+    XPS Fitter uses Qt via PySide6 under the GNU Lesser General Public License v3.0.
+    Qt is dynamically linked. The Qt libraries shipped inside the packaged application
+    (PyInstaller ONEDIR layout) are replaceable: a user may substitute their own build
+    of the corresponding Qt/PySide6 version. Qt source: https://www.qt.io/download
+    PySide6: https://doc.qt.io/qtforpython/  © The Qt Company Ltd.
+
+lmfit .......................... BSD 3-Clause
+pyqtgraph ...................... MIT
+NumPy .......................... BSD 3-Clause
+SciPy .......................... BSD 3-Clause
+pandas ......................... BSD 3-Clause
+openpyxl ....................... MIT
+xlrd ........................... BSD
+matplotlib ..................... Matplotlib License (BSD-compatible, PSF-style)
+vamas .......................... MIT
+
+Full license texts for each dependency are available in their respective distributions
+(e.g. inside the installed Python packages' *.dist-info/ directories) and at the projects'
+homepages. This notice is provided to satisfy the attribution requirements of the above
+licenses.
+
+Reference binding-energy data
+-----------------------------
+The bundled reference database (src/xpsfit/refdb/binding_energies.json) contains individual
+binding-energy *values* (facts, not copyrightable) that were re-keyed by the author, each
+annotated with its literature citation. It is NOT a redistribution of any copyrighted
+compilation (e.g. the NIST XPS Database SRD 20 or the Moulder Handbook tables). Cited sources
+include works by M. C. Biesinger et al., J. F. Moulder et al., and the NIST SRD 20 — see each
+entry's "ref" field and the in-app citation labels.

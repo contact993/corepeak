@@ -38,6 +38,12 @@ class RefDbPanel(QWidget):
         row.addWidget(self.search)
         layout.addLayout(row)
 
+        src = QLabel("BE 값은 <b>문헌 레퍼런스</b>입니다 — 각 상태에 마우스를 올리면 출처가 표시됩니다. "
+                     "출판 전 인용 원문으로 확인하세요.")
+        src.setWordWrap(True)
+        src.setProperty("class", "subtle")
+        layout.addWidget(src)
+
         self.info = QLabel("")
         self.info.setWordWrap(True)
         self.info.setProperty("class", "note")

@@ -1,7 +1,7 @@
 [project]
 name = "xpsfit"
 version = "0.1.0"
-description = "XPSFit Studio - cross-platform XPS peak fitting with built-in reference database and Korean help"
+description = "XPS Fitter - free cross-platform XPS peak fitting with a built-in fit auditor and a citation-backed reference database"
 requires-python = ">=3.12"
 dependencies = [
     "PySide6>=6.8",

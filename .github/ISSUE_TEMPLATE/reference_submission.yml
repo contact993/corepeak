@@ -1,0 +1,55 @@
+name: "📚 Submit a reference value"
+description: "Contribute a binding-energy reference to the built-in database. A literature source is required."
+title: "[Reference] <Element> <orbital> — <chemical state>"
+labels: ["reference-db"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping grow the reference database! Submissions are reviewed for a valid
+        literature source, then merged into a future release (you'll be credited). Only individual
+        **values with citations** are accepted — please don't paste copyrighted tables.
+  - type: input
+    id: element
+    attributes:
+      label: Element
+      placeholder: "e.g. Ni"
+    validations: { required: true }
+  - type: input
+    id: orbital
+    attributes:
+      label: Orbital
+      placeholder: "e.g. 2p (use the principal component: 2p3/2, 3d5/2, 4f7/2)"
+    validations: { required: true }
+  - type: input
+    id: state
+    attributes:
+      label: Chemical state
+      placeholder: "e.g. NiOOH"
+    validations: { required: true }
+  - type: input
+    id: be
+    attributes:
+      label: Binding energy (eV)
+      placeholder: "e.g. 855.0"
+    validations: { required: true }
+  - type: input
+    id: range
+    attributes:
+      label: Reported range (eV, optional)
+      placeholder: "e.g. 854.6 – 855.5"
+  - type: input
+    id: lineshape
+    attributes:
+      label: Lineshape / satellite hint (optional)
+      placeholder: "e.g. broad multiplet; satellite ~861"
+  - type: input
+    id: citation
+    attributes:
+      label: "Literature source (REQUIRED)"
+      placeholder: "Author, Journal Vol (Year) Page  — or DOI"
+    validations: { required: true }
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes (optional)

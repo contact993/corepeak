@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+title: "XPS Fitter"
+message: "If you use this software in your research, please cite it."
+type: software
+abstract: >-
+  XPS Fitter is a free, cross-platform (macOS / Windows) desktop application for X-ray
+  photoelectron spectroscopy (XPS) peak fitting. It reproduces the XPSPEAK 4.1 workflow with
+  modern UX and adds a built-in automated fit auditor (FWHM / doublet / lineshape / satellite
+  checks, residual z-score, BIC, and leave-one-out peak-necessity testing), a citation-backed
+  reference binding-energy database with one-click fitting recipes, spin-orbit doublet and
+  satellite peak types, and flexible data import (.dat/.txt/.csv/.xlsx/.xls, Thermo Avantage,
+  VAMAS, clipboard).
+authors:
+  - family-names: Kim
+    given-names: Taehee
+    email: taeheekim2024@gmail.com
+keywords:
+  - XPS
+  - X-ray photoelectron spectroscopy
+  - peak fitting
+  - curve fitting
+  - surface analysis
+  - spectroscopy
+license: GPL-3.0
+repository-code: "https://github.com/contact993/xpsfit"
+version: "0.1.0"

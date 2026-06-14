@@ -268,6 +268,12 @@ class MainWindow(QMainWindow):
         m_help = self.menuBar().addMenu("&Help")
         self._add_action(m_help, "권장 Fitting 절차", lambda: self._show_help("workflow"))
         self._add_action(m_help, "백그라운드 설명", lambda: self._show_help("background"))
+        m_help.addSeparator()
+        self._add_action(m_help, "💬 피드백 보내기 / 버그 신고", lambda: self._open_url("/issues/new/choose"))
+        self._add_action(m_help, "📚 레퍼런스 값 제보", lambda: self._open_url(
+            "/issues/new?template=reference_submission.yml"))
+        self._add_action(m_help, "❤️ 개발 지원 (후원)", lambda: self._open_url("#sponsor", sponsor=True))
+        m_help.addSeparator()
         self._add_action(m_help, "About", self._about)
 
     def _add_action(self, menu, text, slot, shortcut=None) -> QAction:
@@ -687,10 +693,24 @@ class MainWindow(QMainWindow):
         self.help_panel.show_context(key)
         self.right_tabs.setCurrentWidget(self.help_panel)
 
+    def _open_url(self, path: str, sponsor: bool = False) -> None:
+        from PySide6.QtGui import QDesktopServices
+        from PySide6.QtCore import QUrl
+        from .. import REPO_URL
+        url = (REPO_URL + "?sponsor=1") if sponsor else (REPO_URL + path if path.startswith("/")
+               else REPO_URL)
+        # sponsor → GitHub Sponsors page once enabled; falls back to the repo
+        if sponsor:
+            url = "https://github.com/sponsors/contact993"
+        QDesktopServices.openUrl(QUrl(url))
+
     def _about(self) -> None:
         QMessageBox.about(
             self, APP_NAME,
-            f"<b>{APP_NAME} {__version__}</b><br>"
-            "XPS peak fitting — XPSPEAK 워크플로 + 레퍼런스 DB + 한국어 가이드<br>"
-            "엔진: lmfit / scipy · UI: PySide6 + pyqtgraph<br><br>"
-            "BE 데이터베이스 출처: Biesinger et al., Moulder Handbook, NIST SRD 20")
+            f"<b>{APP_NAME} {__version__}</b> — free XPS peak fitting (GPLv3)<br>"
+            "XPSPEAK 워크플로 + fit audit + 레퍼런스 DB + 한국어 가이드<br><br>"
+            "엔진: lmfit / scipy · 플로팅: pyqtgraph<br>"
+            "Uses Qt via PySide6 under the LGPLv3 — Qt source: https://www.qt.io/download<br><br>"
+            "BE 데이터베이스: 문헌 레퍼런스 값 (각 항목에 출처 표기) — "
+            "Biesinger et al., Moulder Handbook, NIST SRD 20<br>"
+            "<a href='https://github.com/contact993/xpsfit'>github.com/contact993/xpsfit</a>")
