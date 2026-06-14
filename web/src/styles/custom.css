@@ -26,6 +26,12 @@
   margin-inline: calc(50% - 50vw);
 }
 
+/* hide Starlight's auto page-title H1 on our custom landing pages only */
+body:has(.cp-hero) h1#_top { display: none; }
+/* let the hero sit flush at the top of the splash content; prevent full-bleed scrollbar */
+body:has(.cp-hero) .sl-markdown-content { margin-top: 0; }
+body:has(.cp-hero) { overflow-x: hidden; }
+
 /* ---------- hero ---------- */
 .cp-hero {
   background: radial-gradient(1200px 500px at 50% -10%, var(--cp-grad-1), var(--cp-grad-2));
