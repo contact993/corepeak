@@ -1,0 +1,15 @@
+/* Corepeak brand accent — blue, matching the app */
+:root {
+  --sl-color-accent-low: #1a2a47;
+  --sl-color-accent: #2563eb;
+  --sl-color-accent-high: #bcd0f7;
+  --sl-color-white: #ffffff;
+}
+:root[data-theme='light'] {
+  --sl-color-accent-low: #d7e3fb;
+  --sl-color-accent: #2563eb;
+  --sl-color-accent-high: #16243a;
+}
+
+/* Tighter hero on the splash page */
+.hero h1 { letter-spacing: -0.02em; }

@@ -1,9 +1,9 @@
 cff-version: 1.2.0
-title: "XPS Fitter"
+title: "Corepeak"
 message: "If you use this software in your research, please cite it."
 type: software
 abstract: >-
-  XPS Fitter is a free, cross-platform (macOS / Windows) desktop application for X-ray
+  Corepeak is a free, cross-platform (macOS / Windows) desktop application for X-ray
   photoelectron spectroscopy (XPS) peak fitting. It reproduces the XPSPEAK 4.1 workflow with
   modern UX and adds a built-in automated fit auditor (FWHM / doublet / lineshape / satellite
   checks, residual z-score, BIC, and leave-one-out peak-necessity testing), a citation-backed

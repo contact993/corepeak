@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://contact993.github.io/corepeak/sitemap-index.xml

@@ -1,0 +1,57 @@
+---
+// Custom Starlight footer: default footer + Giscus comments + an EthicalAds slot.
+// Both are inert until their accounts are wired (see TODOs); they fail silently otherwise.
+import Default from '@astrojs/starlight/components/Footer.astro';
+
+// Comments/ads only on content pages, not the splash landing page.
+const isSplash = Astro.props.entry?.data?.template === 'splash';
+---
+
+<Default {...Astro.props}><slot /></Default>
+
+{!isSplash && (
+  <div class="cp-extras">
+    {/* EthicalAds — privacy-friendly, dev/docs network. Activates after EthicalAds approval.
+        Replace data-ea-publisher with your publisher id and enable the script below. */}
+    <div class="cp-ad">
+      <div data-ea-publisher="REPLACE_ME" data-ea-type="text" class="horizontal"></div>
+    </div>
+
+    {/* Giscus comments (GitHub Discussions). Fill repo-id / category-id from giscus.app
+        after the repo is public and Discussions is enabled. */}
+    <section class="cp-comments" aria-label="Comments">
+      <h2>Comments & questions</h2>
+      <script
+        src="https://giscus.app/client.js"
+        data-repo="contact993/xpsfit"
+        data-repo-id="REPLACE_ME"
+        data-category="General"
+        data-category-id="REPLACE_ME"
+        data-mapping="pathname"
+        data-strict="1"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="preferred_color_scheme"
+        data-lang="en"
+        crossorigin="anonymous"
+        async
+      ></script>
+      <noscript>
+        Comments are powered by GitHub Discussions —
+        <a href="https://github.com/contact993/xpsfit/discussions">open the board</a>.
+      </noscript>
+    </section>
+  </div>
+)}
+
+<style>
+  .cp-extras { margin-top: 2rem; }
+  .cp-ad { margin: 1.5rem 0; min-height: 1px; }
+  .cp-comments { margin-top: 2rem; border-top: 1px solid var(--sl-color-gray-5); padding-top: 1.5rem; }
+  .cp-comments h2 { font-size: var(--sl-text-h4); margin-bottom: 1rem; }
+</style>
+
+{/* Enable after EthicalAds approval:
+<script is:inline async src="https://media.ethicalads.io/media/client/ethicalads.min.js"></script>
+*/}

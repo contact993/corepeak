@@ -1,9 +1,9 @@
-# XPS Fitter
+# Corepeak
 
 **Free, cross-platform XPS peak-fitting for macOS & Windows — with a built-in fit auditor and a
 citation-backed reference database. The modern replacement for XPSPEAK 4.1.**
 
-XPS Fitter reproduces the familiar XPSPEAK workflow with a modern interface, then goes further:
+Corepeak reproduces the familiar XPSPEAK workflow with a modern interface, then goes further:
 it doesn't just let you fit X-ray photoelectron spectroscopy data — it **checks whether your fit
 is physically and statistically defensible**, and it knows the literature binding energies so you
 don't have to look them up.
@@ -13,9 +13,9 @@ don't have to look them up.
 > Free and open source (GPLv3). Academic use is free forever. No account, no limits, no ads on the
 > download — and no 5,000-point / 51-peak ceiling like XPSPEAK.
 
-## Why XPS Fitter
+## Why Corepeak
 
-| | XPS Fitter | XPSPEAK 4.1 | CasaXPS | KherveFitting / LG4X |
+| | Corepeak | XPSPEAK 4.1 | CasaXPS | KherveFitting / LG4X |
 |---|---|---|---|---|
 | Price | **Free (OSS)** | Free | €830+ (academic) | Free (OSS) |
 | macOS native | **✅** | ❌ (Windows only) | ❌ (emulation) | ✅ |
@@ -53,8 +53,8 @@ don't have to look them up.
 
 Download the latest signed build from the [Releases](https://github.com/contact993/xpsfit/releases)
 page:
-- **macOS** — unzip, move `XPS Fitter.app` to Applications, first launch via right-click → Open.
-- **Windows** — unzip, run `XPS Fitter.exe` from the extracted folder ("More info → Run anyway" on
+- **macOS** — unzip, move `Corepeak.app` to Applications, first launch via right-click → Open.
+- **Windows** — unzip, run `Corepeak.exe` from the extracted folder ("More info → Run anyway" on
   the first SmartScreen prompt).
 
 No Python install required.
@@ -79,7 +79,7 @@ This tool grows from its users:
 
 ## How to cite
 
-If XPS Fitter helped your work, please cite it (see [CITATION.cff](CITATION.cff)). A software paper
+If Corepeak helped your work, please cite it (see [CITATION.cff](CITATION.cff)). A software paper
 with a DOI is in preparation; until then, cite the repository and release version.
 
 ## License
