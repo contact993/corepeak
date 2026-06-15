@@ -46,6 +46,10 @@ export default defineConfig({
       },
       head: [
         {
+          tag: 'meta',
+          attrs: { name: 'google-site-verification', content: 'Jb7_bS0AuF37HAY96022zna0kUWMYkEee1z8YZSFsSY' },
+        },
+        {
           tag: 'script',
           attrs: { type: 'application/ld+json' },
           content: JSON.stringify(softwareJsonLd),
