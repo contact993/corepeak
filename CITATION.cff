@@ -11,9 +11,7 @@ abstract: >-
   satellite peak types, and flexible data import (.dat/.txt/.csv/.xlsx/.xls, Thermo Avantage,
   VAMAS, clipboard).
 authors:
-  - family-names: Kim
-    given-names: Taehee
-    email: taeheekim2024@gmail.com
+  - name: "Pika"
 keywords:
   - XPS
   - X-ray photoelectron spectroscopy

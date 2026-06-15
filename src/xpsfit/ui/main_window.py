@@ -745,7 +745,7 @@ class MainWindow(QMainWindow):
         from .. import REPO_URL
         return (
             "@software{pikaxps,\n"
-            "  author  = {Kim, Taehee},\n"
+            "  author  = {Pika},\n"
             "  title   = {PikaXPS: free cross-platform XPS peak fitting with a built-in fit auditor},\n"
             "  year    = {2026},\n"
             f"  url     = {{{REPO_URL}}},\n"

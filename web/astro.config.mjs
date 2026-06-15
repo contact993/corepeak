@@ -20,7 +20,7 @@ const softwareJsonLd = {
   softwareVersion: '0.1.0',
   license: 'https://www.gnu.org/licenses/gpl-3.0.html',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-  author: { '@type': 'Person', name: 'Taehee Kim' },
+  author: { '@type': 'Person', name: 'Pika' },
 };
 
 export default defineConfig({

@@ -19,4 +19,4 @@ or a closed instrument-control product), contact the author to arrange a commerc
 This dual-licensing reserves the option of a future commercial license at no cost or obligation
 to anyone today, and keeps the tool free for the academic community indefinitely.
 
-**Contact:** taeheekim2024@gmail.com
+**Contact:** open an issue or discussion at https://github.com/contact993/pikaxps

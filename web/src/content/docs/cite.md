@@ -31,7 +31,7 @@ is in preparation; until it appears, cite the repository and the version you use
 
 ```bibtex
 @software{pikaxps,
-  author  = {Kim, Taehee},
+  author  = {Pika},
   title   = {PikaXPS: free cross-platform XPS peak fitting with a built-in fit auditor},
   year    = {2026},
   url     = {https://github.com/contact993/pikaxps},
