@@ -1,7 +1,13 @@
-# PikaXPS
+<p align="center">
+  <img src="build_scripts/icon_1024.png" width="116" alt="PikaXPS — the pika mascot, sitting on a spectral peak">
+</p>
+
+<h1 align="center">PikaXPS</h1>
 
 **Free, cross-platform XPS peak-fitting for macOS & Windows — with a built-in fit auditor and a
 citation-backed reference database. The modern replacement for XPSPEAK 4.1.**
+
+> The alpine *pika* lives on rocky **peaks** — a fitting mascot for a peak-fitting tool. (Always one word: **PikaXPS**.)
 
 PikaXPS reproduces the familiar XPSPEAK workflow with a modern interface, then goes further:
 it doesn't just let you fit X-ray photoelectron spectroscopy data — it **checks whether your fit

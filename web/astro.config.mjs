@@ -34,6 +34,7 @@ export default defineConfig({
       description:
         'Free, cross-platform XPS peak-fitting software with a fit auditor and a citation-backed reference database. The modern XPSPEAK 4.1 replacement.',
       social: { github: 'https://github.com/contact993/pikaxps' },
+      favicon: '/favicon.svg',
       customCss: ['./src/styles/custom.css'],
       defaultLocale: 'root',
       locales: {
