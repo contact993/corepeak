@@ -51,6 +51,18 @@ export default defineConfig({
         },
         {
           tag: 'script',
+          attrs: { async: true, src: 'https://www.googletagmanager.com/gtag/js?id=G-3F1GD0CKKM' },
+        },
+        {
+          tag: 'script',
+          content:
+            "window.dataLayer = window.dataLayer || [];\n" +
+            "function gtag(){dataLayer.push(arguments);}\n" +
+            "gtag('js', new Date());\n" +
+            "gtag('config', 'G-3F1GD0CKKM');",
+        },
+        {
+          tag: 'script',
           attrs: { type: 'application/ld+json' },
           content: JSON.stringify(softwareJsonLd),
         },

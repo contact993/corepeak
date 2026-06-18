@@ -449,6 +449,13 @@ const body = `
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="google-site-verification" content="Jb7_bS0AuF37HAY96022zna0kUWMYkEee1z8YZSFsSY" />
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-3F1GD0CKKM"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-3F1GD0CKKM');
+    </script>
     <title>{t.htmlTitle}</title>
     <meta name="description" content={t.metaDesc} />
     <link rel="canonical" href={Astro.site ? new URL(lang === 'ko' ? `${BASE}ko/` : BASE, Astro.site).href : docBase} />
